@@ -46,11 +46,11 @@ namespace DeliveryApi.Controllers
         [HttpGet("Route")]
         public ActionResult<List<PointItem>> GetDeliveryRoute()
         {
-            var items = _context.DeliveryItems;
+            var deliveriesItems = _context.DeliveryItems;
 
             List<PointItem> ret = new List<PointItem>();
 
-            foreach (var item in items)
+            foreach (var item in deliveriesItems)
             {
                 PointItem point = new PointItem
                 {
@@ -60,17 +60,22 @@ namespace DeliveryApi.Controllers
                 ret.Add(point);
             }
 
+            var shuffled = ret.OrderBy(a => Guid.NewGuid()).ToList();
+
+            // Now we have just one base
             var bases = _context.BaseItems;
 
             foreach (var item in bases)
             {
-                PointItem point = new PointItem();
-                point.Latitude = item.Latitude;
-                point.Longitude = item.Longitude;
-                ret.Add(point);
+                PointItem point = new PointItem
+                {
+                    Latitude = item.Latitude,
+                    Longitude = item.Longitude
+                };
+                shuffled.Insert(0, point);  //Instert base as the beggining of route
             }
-
-            return ret;
+            
+            return shuffled;
         }
 
         // PUT: api/DeliveryItems/5
