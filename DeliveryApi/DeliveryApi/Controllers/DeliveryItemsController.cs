@@ -44,7 +44,7 @@ namespace DeliveryApi.Controllers
 
         // GET: api/DeliveryItems/Route
         [HttpGet("Route")]
-        public List<PointItem> GetDeliveryRoute()
+        public ActionResult<List<PointItem>> GetDeliveryRoute()
         {
             var items = _context.DeliveryItems;
 
@@ -52,9 +52,11 @@ namespace DeliveryApi.Controllers
 
             foreach (var item in items)
             {
-                PointItem point = new PointItem();
-                point.Latitude = item.Latitude;
-                point.Longitude = item.Longitude;
+                PointItem point = new PointItem
+                {
+                    Latitude = item.Latitude,
+                    Longitude = item.Longitude
+                };
                 ret.Add(point);
             }
 

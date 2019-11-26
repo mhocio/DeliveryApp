@@ -25,6 +25,10 @@ function buttonShowRoute() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
+function clearRoute() {
+    if (polyline)
+        mymap.removeLayer(polyline);
+}
 
 function _displayRoute(data) {
     console.log(data);
@@ -37,10 +41,10 @@ function _displayRoute(data) {
         for (i = 0; i < data.length; i++) {
             test.push([data[i].latitude, data[i].longitude]);
         }
-        if (polyline)
-            mymap.removeLayer(polyline);
 
-        polyline = L.polyline(test, { color: 'red', clickable: 'true' }).addTo(mymap);
+        clearRoute();
+
+        polyline = L.polyline(test, { color: 'red', clickable: 'true', snakingSpeed: 600 }).addTo(mymap).snakeIn();
     }
 }
 
@@ -256,6 +260,7 @@ function _displayCount(itemCount) {
 
 function _displayBase(data) {
 
+    clearRoute();
     markersBaseLayer.clearLayers();
 
     data.forEach(item => {
@@ -278,6 +283,8 @@ function _displayBase(data) {
 }
 
 function _displayItems(data) {
+    clearRoute();
+
     const tBody = document.getElementById('deliveries');
     tBody.innerHTML = '';
 
