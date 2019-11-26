@@ -41,6 +41,9 @@ namespace DeliveryApi.Controllers
             return item;
         }
 
+
+        // GET: api/base
+        [HttpGet("Route")]
         public IEnumerable<BaseDeliveryItem> GetBasesEnumerable()
         {
             return _context.BaseDeliveriesItems.ToList();

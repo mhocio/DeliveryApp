@@ -14,5 +14,6 @@ namespace DeliveryApi.Models
         }
 
         public DbSet<DeliveryItem> DeliveryItems { get; set; }
+        public DbSet<BaseDeliveryItem> BaseItems { get; set; }
     }
 }

@@ -46,9 +46,6 @@ namespace DeliveryApi.Controllers
         [HttpGet("Route")]
         public List<PointItem> GetDeliveryRoute()
         {
-            //var bases = new BaseDeliveriesController(BaseContext).GetBases();
-            var bases = new BaseDeliveriesController(BaseContext).GetBasesEnumerable();
-
             var items = _context.DeliveryItems;
 
             List<PointItem> ret = new List<PointItem>();
@@ -61,10 +58,9 @@ namespace DeliveryApi.Controllers
                 ret.Add(point);
             }
 
-            //var tmpTask = bases.Result.Value;
-            var tmpTask = bases;
+            var bases = _context.BaseItems;
 
-            foreach (var item in tmpTask)
+            foreach (var item in bases)
             {
                 PointItem point = new PointItem();
                 point.Latitude = item.Latitude;
@@ -73,8 +69,6 @@ namespace DeliveryApi.Controllers
             }
 
             return ret;
-
-            //return await packages;
         }
 
         // PUT: api/DeliveryItems/5
@@ -138,9 +132,54 @@ namespace DeliveryApi.Controllers
             return deliveryItem;
         }
 
+
+
         private bool DeliveryItemExists(long id)
         {
             return _context.DeliveryItems.Any(e => e.Id == id);
+        }
+
+        // BASE
+
+
+        // GET: api/base
+        [HttpGet("Base")]
+        public async Task<ActionResult<IEnumerable<BaseDeliveryItem>>> GetBases()
+        {
+            return await _context.BaseItems.ToListAsync();
+        }
+
+        // GET: api/base/1
+        [HttpGet("Base/{id}")]
+        public async Task<ActionResult<BaseDeliveryItem>> GetBaseItem(long id)
+        {
+            var item = await _context.BaseItems.FindAsync(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // POST: api/base
+        [HttpPost("Base")]
+        public async Task<ActionResult<BaseDeliveryItem>> PostBase(BaseDeliveryItem baseItem)
+        {
+            foreach (var id in _context.BaseItems.Select(e => e.Id))
+            {
+                var entity = new BaseDeliveryItem { Id = id };
+                _context.BaseItems.Attach(entity);
+                _context.BaseItems.Remove(entity);
+            }
+            await _context.SaveChangesAsync();
+
+            _context.BaseItems.Add(baseItem);
+            await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetDeliveryItem", new { id = deliveryItem.Id }, deliveryItem);
+            return CreatedAtAction(nameof(GetBaseItem), new { id = baseItem.Id }, baseItem);
         }
     }
 }

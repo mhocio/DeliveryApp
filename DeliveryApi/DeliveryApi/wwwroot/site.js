@@ -1,18 +1,48 @@
 ﻿// JavaScript source code
 
 const uri = 'api/DeliveryItems';
-const uribase = 'api/Base';
+const uribase = 'api/DeliveryItems/Base';
+const uriRoute = 'api/DeliveryItems/Route';
 let deliveries = [];
 
 var mymap;
-var marker;
+var marker;  // tmp marker to click while adding new base or delivery
 var isUpdated;
-var markersLayer;
-var markersBaseLayer;
+
+var markersLayer; // deliveries markers
+var markersBaseLayer;  // base markers
+
+var polyline = null; // route line
 
 var addMode = false;
 var editMode = false;
 var addBaseMode = false;
+
+function buttonShowRoute() {
+    fetch(uriRoute)
+        .then(response => response.json())
+        .then(data => _displayRoute(data))
+        .catch(error => console.error('Unable to get items.', error));
+}
+
+
+function _displayRoute(data) {
+    console.log(data);
+
+    var test = new Array();
+
+    // create a polyline from an array of LatLng points
+    if (data.length > 1) {
+        console.log("adding");
+        for (i = 0; i < data.length; i++) {
+            test.push([data[i].latitude, data[i].longitude]);
+        }
+        if (polyline)
+            mymap.removeLayer(polyline);
+
+        polyline = L.polyline(test, { color: 'red', clickable: 'true' }).addTo(mymap);
+    }
+}
 
 function buttonAddDelivery() {
     closeAllForms();
@@ -381,6 +411,8 @@ function loadMap() {
 
     markersLayer = L.layerGroup().addTo(mymap);
     markersBaseLayer = L.layerGroup().addTo(mymap);
+
+    //polyline = L.layerGroup().addTo(mymap);
 
     //const GeoSearch = withLeaflet(Search);
 
