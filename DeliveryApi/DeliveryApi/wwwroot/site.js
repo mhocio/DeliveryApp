@@ -1,14 +1,31 @@
 ﻿// JavaScript source code
 
 const uri = 'api/DeliveryItems';
+const uribase = 'api/Base';
 let deliveries = [];
 
 var mymap;
 var marker;
 var isUpdated;
 var markersLayer;
+var markersBaseLayer;
 
-var addMode;
+var addMode = false;
+var editMode = false;
+var addBaseMode = false;
+
+function buttonAddDelivery() {
+    closeAllForms();
+    document.getElementById('addForm').style.display = 'block';
+    addMode = true;
+}
+
+function buttonAddBase() {
+    closeAllForms();
+    document.getElementById('addBaseForm').style.display = 'block';
+    addMode = false;
+    addBaseMode = true;
+}
 
 function getItems() {
     fetch(uri)
@@ -17,10 +34,52 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
+function getBase() {
+    fetch(uribase)
+        .then(response => response.json())
+        .then(data => _displayBase(data))
+        .catch(error => console.error('Unable to get items.', error));
+}
+
+function addBase() {
+    if (!addBaseMode) {
+        return;
+    }
+
+    const addLat = document.getElementById('add-base-lat');
+    const addLong = document.getElementById('add-base-long');
+
+    const item = {
+        latitude: addLat.value.trim(),
+        longitude: addLong.value.trim()
+    };
+
+    fetch(uribase, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        .then(response => response.json())
+        .then(() => {
+            getBase();
+            addLat.value = '';
+            addLong.value = '';
+        })
+        .catch(error => console.error('Unable to add item.', error));
+
+    if (marker) {
+        mymap.removeLayer(marker);
+    }
+}
+
 function addItem() {
     if (!addMode) {
         return;
     }
+
     const addName = document.getElementById('add-name');
     const addLat = document.getElementById('add-lat');
     const addLong = document.getElementById('add-long');
@@ -48,6 +107,7 @@ function addItem() {
             addLat.value = '';
             addLong.value = '';
             addSize.value = '';
+            //closeAddBaseForm();
         })
         .catch(error => console.error('Unable to add item.', error));
 
@@ -65,7 +125,8 @@ function deleteItem(id) {
 }
 
 function displayEditForm(id) {
-    addMode = false;
+    closeAllForms();
+    editMode = true;
 
     const item = deliveries.find(item => item.id === id);
 
@@ -104,24 +165,86 @@ function updateItem() {
         .then(() => getItems())
         .catch(error => console.error('Unable to delete item.', error));
 
-    closeInput();
+    closeInputEditForm();
 
     return false;
 }
 
-function closeInput() {
+/* Closing forms
+ * */
+function closeInputEditForm() {
     document.getElementById('editForm').style.display = 'none';
     isUpdated = false;
     if (marker) {
         mymap.removeLayer(marker);
     }
-    addMode = true;
+
+    /*addMode = true;*/
+    editMode = false;
 }
+
+function closeAddBaseForm() {
+    document.getElementById('addBaseForm').style.display = 'none';
+    isUpdated = false;
+    if (marker) {
+        mymap.removeLayer(marker);
+    }
+    addBaseMode = false;
+    editMode = false;
+}
+
+function closeAddPackageForm() {
+    document.getElementById('addForm').style.display = 'none';
+    isUpdated = false;
+    if (marker) {
+        mymap.removeLayer(marker);
+    }
+    addMode = false;
+    editMode = false;
+}
+
+function closeAllForms() {
+    document.getElementById('addForm').style.display = 'none';
+    document.getElementById('addBaseForm').style.display = 'none';
+    document.getElementById('editForm').style.display = 'none';
+    if (marker) {
+        mymap.removeLayer(marker);
+    }
+    addBaseMode = false;
+    addMode = false;
+    editMode = false;
+}
+
+/* Closing forms
+ * */
 
 function _displayCount(itemCount) {
     const name = (itemCount === 1) ? 'delivery' : 'deliveries';
 
     document.getElementById('counter').innerText = `${itemCount} ${name}`;
+}
+
+function _displayBase(data) {
+
+    markersBaseLayer.clearLayers();
+
+    data.forEach(item => {
+
+        var markerBase = L.marker([item.latitude, item.longitude],
+            {
+                title: "Base"
+                    + "\n" + parseFloat(item.latitude).toFixed(4)
+                    + "\n" + parseFloat(item.longitude).toFixed(4),
+                icon: redIcon
+            }).addTo(mymap);
+
+        markerBase.on('click', markerOnClick).addTo(mymap);
+        markerBase.bindPopup("Base" +
+            + "\n" + parseFloat(item.latitude).toFixed(4)
+            + "\n" + parseFloat(item.longitude).toFixed(4));
+
+        markerBase.addTo(markersBaseLayer);
+    });
 }
 
 function _displayItems(data) {
@@ -177,51 +300,69 @@ function _displayItems(data) {
 
         var marker = L.marker([item.latitude, item.longitude],
             {
-                title: item.name
+                title: "name: " + item.name
                     + "\n" + parseFloat(item.latitude).toFixed(4)
                     + "\n" + parseFloat(item.longitude).toFixed(4)
             });
         marker.on('mouseover', function () {
             marker.openPopup();
         });
+
+        marker.on('click', markerOnClick).addTo(mymap);
+        marker.bindPopup(item.name
+            + "\n" + parseFloat(item.latitude).toFixed(4)
+            + "\n" + parseFloat(item.longitude).toFixed(4));
+
         marker.addTo(markersLayer);
     });
 
     deliveries = data;
 }
 
-var greenIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
+function markerOnClick(e) {
+    //alert("hi. you clicked the marker at " + e.latlng);
+    marker.openPopup();
+}
 
 function onMapClick(e) {
     var latleng = e.latlng;
-
-    if (!isUpdated) {
-        document.getElementById("add-lat").value = latleng.lat;
-        document.getElementById("add-long").value = latleng.lng;
-    }
-    else {
-        document.getElementById("edit-lat").value = latleng.lat;
-        document.getElementById("edit-long").value = latleng.lng;
-    }
 
     if (marker) {
         mymap.removeLayer(marker);
     }
 
-    marker = L.marker([latleng.lat, latleng.lng],
-        {
-            bounceOnAdd: true,
-            bounceOnAddOptions: { duration: 5000, height: 100, loop: 2 },
-            bounceOnAddCallback: function () { console.log("done"); },
-            icon: greenIcon
-        }).addTo(mymap);
+    if (addMode || editMode)
+        marker = L.marker([latleng.lat, latleng.lng],
+            {
+                bounceOnAdd: true,
+                bounceOnAddOptions: { duration: 5000, height: 100, loop: 2 },
+                bounceOnAddCallback: function () { console.log("done"); },
+                icon: greenIcon
+            }).addTo(mymap);
+
+    if (addBaseMode) {
+        marker = L.marker([latleng.lat, latleng.lng],
+            {
+                bounceOnAdd: true,
+                bounceOnAddOptions: { duration: 5000, height: 100, loop: 2 },
+                bounceOnAddCallback: function () { console.log("done"); },
+                icon: redIcon
+            }).addTo(mymap);
+    }
+
+    if (addMode) {
+        document.getElementById("add-lat").value = latleng.lat;
+        document.getElementById("add-long").value = latleng.lng;
+    }
+    else if (editMode) {
+        document.getElementById("edit-lat").value = latleng.lat;
+        document.getElementById("edit-long").value = latleng.lng;
+    }
+    else if (addBaseMode) {
+        document.getElementById("add-base-lat").value = latleng.lat;
+        document.getElementById("add-base-long").value = latleng.lng;
+    }
+
 }
 
 function loadMap() {
@@ -239,12 +380,11 @@ function loadMap() {
     isUpdated = false;
 
     markersLayer = L.layerGroup().addTo(mymap);
+    markersBaseLayer = L.layerGroup().addTo(mymap);
 
-    addMode = true;
+    //const GeoSearch = withLeaflet(Search);
 
-    const GeoSearch = withLeaflet(Search)
-
-    GeoSearch.addTo(mymap);
+    //GeoSearch.addTo(mymap);
 }
 
 document.addEventListener("DOMContentLoaded", loadMap, false);

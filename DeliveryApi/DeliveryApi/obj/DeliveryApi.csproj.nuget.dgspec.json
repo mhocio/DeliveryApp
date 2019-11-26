@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mhocio/Documents/html/fromhtml2gis-hoscilom/Actual/DeliveryApi/DeliveryApi/DeliveryApi.csproj": {}
+    "/Users/mhocio/Documents/html/DeliveryApp/DeliveryApi/DeliveryApi/DeliveryApi.csproj": {}
   },
   "projects": {
-    "/Users/mhocio/Documents/html/fromhtml2gis-hoscilom/Actual/DeliveryApi/DeliveryApi/DeliveryApi.csproj": {
+    "/Users/mhocio/Documents/html/DeliveryApp/DeliveryApi/DeliveryApi/DeliveryApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mhocio/Documents/html/fromhtml2gis-hoscilom/Actual/DeliveryApi/DeliveryApi/DeliveryApi.csproj",
+        "projectUniqueName": "/Users/mhocio/Documents/html/DeliveryApp/DeliveryApi/DeliveryApi/DeliveryApi.csproj",
         "projectName": "DeliveryApi",
-        "projectPath": "/Users/mhocio/Documents/html/fromhtml2gis-hoscilom/Actual/DeliveryApi/DeliveryApi/DeliveryApi.csproj",
+        "projectPath": "/Users/mhocio/Documents/html/DeliveryApp/DeliveryApi/DeliveryApi/DeliveryApi.csproj",
         "packagesPath": "/Users/mhocio/.nuget/packages/",
-        "outputPath": "/Users/mhocio/Documents/html/fromhtml2gis-hoscilom/Actual/DeliveryApi/DeliveryApi/obj/",
+        "outputPath": "/Users/mhocio/Documents/html/DeliveryApp/DeliveryApi/DeliveryApi/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"

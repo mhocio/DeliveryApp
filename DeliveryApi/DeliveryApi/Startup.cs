@@ -28,6 +28,7 @@ namespace DeliveryApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DeliveryContext>(opt => opt.UseInMemoryDatabase("DeliveryList"));
+            services.AddDbContext<BaseDeliveriesContext>(opt => opt.UseInMemoryDatabase("BaseList"));
             services.AddControllers();
         }
 

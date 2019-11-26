@@ -14,6 +14,7 @@ namespace DeliveryApi.Controllers
     public class DeliveryItemsController : ControllerBase
     {
         private readonly DeliveryContext _context;
+        private readonly BaseDeliveriesContext BaseContext;
 
         public DeliveryItemsController(DeliveryContext context)
         {
@@ -39,6 +40,41 @@ namespace DeliveryApi.Controllers
             }
 
             return deliveryItem;
+        }
+
+        // GET: api/DeliveryItems/Route
+        [HttpGet("Route")]
+        public List<PointItem> GetDeliveryRoute()
+        {
+            //var bases = new BaseDeliveriesController(BaseContext).GetBases();
+            var bases = new BaseDeliveriesController(BaseContext).GetBasesEnumerable();
+
+            var items = _context.DeliveryItems;
+
+            List<PointItem> ret = new List<PointItem>();
+
+            foreach (var item in items)
+            {
+                PointItem point = new PointItem();
+                point.Latitude = item.Latitude;
+                point.Longitude = item.Longitude;
+                ret.Add(point);
+            }
+
+            //var tmpTask = bases.Result.Value;
+            var tmpTask = bases;
+
+            foreach (var item in tmpTask)
+            {
+                PointItem point = new PointItem();
+                point.Latitude = item.Latitude;
+                point.Longitude = item.Longitude;
+                ret.Add(point);
+            }
+
+            return ret;
+
+            //return await packages;
         }
 
         // PUT: api/DeliveryItems/5
