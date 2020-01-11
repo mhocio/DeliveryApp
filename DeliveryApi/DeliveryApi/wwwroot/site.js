@@ -19,15 +19,61 @@ var editMode = false;
 var addBaseMode = false;
 
 function buttonShowRoute() {
+    toDisplay = new Array();
+
     fetch(uriRoute)
         .then(response => response.json())
-        .then(data => _displayRoute(data))
-        .catch(error => console.error('Unable to get items.', error));
+        .then(data => {
+
+            console.log(data);
+
+            pointsString = "";
+            for (i = 0; i < data.length; i++) {
+                pointsString += data[i].longitude.toString();
+                pointsString += ",";
+                pointsString += data[i].latitude.toString();
+                if (i + 1 < data.length) {
+                    pointsString += ";";
+                }
+            }
+            console.log(pointsString);
+
+            fetch('http://127.0.0.1:5000/trip/v1/driving/' + pointsString + '?steps=true', {
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    _displayRouteFromPolyline(data);
+                })
+                .catch(error => console.error('Unable to fetch OSRM.', error));
+
+        })
+        .catch(error => console.error('Unable to get packages to draw route.', error));
+
+    /*
+    fetch('http://127.0.0.1:5000/trip/v1/driving/21.0018,52.2277;21.0226,52.2288?steps=true', {
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            _displayRouteFromPolyline(data);
+        })*/
 }
 
 function clearRoute() {
     if (polyline)
         mymap.removeLayer(polyline);
+}
+
+function _displayRouteFromPolyline(data) {
+    clearRoute();
+
+    var encoded = data.trips[0].geometry;
+    console.log(encoded);
+    polyline = L.Polyline.fromEncoded(encoded, { color: '#2A4B7C', clickable: 'true', snakingSpeed: 400, opacity: 0.7, fillOpacity: 0.5});
+
+    mymap.fitBounds(polyline.getBounds());
+    polyline.addTo(mymap).snakeIn();
 }
 
 function _displayRoute(data) {
@@ -42,6 +88,7 @@ function _displayRoute(data) {
             test.push([data[i].latitude, data[i].longitude]);
         }
 
+        console.log(test);
         clearRoute();
 
         polyline = L.polyline(test, { color: 'red', clickable: 'true', snakingSpeed: 600 }).addTo(mymap).snakeIn();
@@ -334,23 +381,35 @@ function _displayItems(data) {
         let td6 = tr.insertCell(5);
         td6.appendChild(deleteButton);
 
-
         var marker = L.marker([item.latitude, item.longitude],
             {
                 title: "name: " + item.name
                     + "\n" + parseFloat(item.latitude).toFixed(4)
                     + "\n" + parseFloat(item.longitude).toFixed(4)
             });
+
         marker.on('mouseover', function () {
             marker.openPopup();
         });
 
-        marker.on('click', markerOnClick).addTo(mymap);
-        marker.bindPopup(item.name
-            + "\n" + parseFloat(item.latitude).toFixed(4)
-            + "\n" + parseFloat(item.longitude).toFixed(4));
+        var div_element = document.createElement("div");
+
+        var p_element = document.createElement("p");
+        p_element.innerHTML += item.name;
+        var br_element = document.createElement("br");
+        p_element.appendChild(br_element);
+        p_element.innerHTML += parseFloat(item.latitude).toFixed(4) + " " + parseFloat(item.longitude).toFixed(4);
+        div_element.appendChild(p_element)
+
+        let deleteButtonFromPopup = document.createElement("button");
+        deleteButtonFromPopup.innerText = 'Delete Item';
+        deleteButtonFromPopup.setAttribute('onclick', `deleteItem(${item.id})`);
+        div_element.appendChild(deleteButtonFromPopup);
+
+        marker.bindPopup(div_element);
 
         marker.addTo(markersLayer);
+
     });
 
     deliveries = data;
@@ -372,7 +431,7 @@ function onMapClick(e) {
         marker = L.marker([latleng.lat, latleng.lng],
             {
                 bounceOnAdd: true,
-                bounceOnAddOptions: { duration: 5000, height: 100, loop: 2 },
+                bounceOnAddOptions: { duration: 500, height: 20, loop: 1 },
                 bounceOnAddCallback: function () { console.log("done"); },
                 icon: greenIcon
             }).addTo(mymap);
@@ -381,7 +440,7 @@ function onMapClick(e) {
         marker = L.marker([latleng.lat, latleng.lng],
             {
                 bounceOnAdd: true,
-                bounceOnAddOptions: { duration: 5000, height: 100, loop: 2 },
+                bounceOnAddOptions: { duration: 500, height: 20, loop: 1 },
                 bounceOnAddCallback: function () { console.log("done"); },
                 icon: redIcon
             }).addTo(mymap);
@@ -419,11 +478,11 @@ function loadMap() {
     markersLayer = L.layerGroup().addTo(mymap);
     markersBaseLayer = L.layerGroup().addTo(mymap);
 
-    //polyline = L.layerGroup().addTo(mymap);
-
     //const GeoSearch = withLeaflet(Search);
 
     //GeoSearch.addTo(mymap);
+
+    L.control.scale().addTo(mymap);
 }
 
 document.addEventListener("DOMContentLoaded", loadMap, false);
