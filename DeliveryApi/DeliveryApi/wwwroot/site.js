@@ -21,7 +21,6 @@ function buttonAddDelivery() {
     closeAllForms();
     document.getElementById("addForm").style.display = "block";
     addMode = true;
-    Swal.fire('Hello world!');
 }
 
 function buttonAddBase() {
@@ -127,7 +126,8 @@ function _displayItems(data) {
                 "\n" +
                 parseFloat(item.latitude).toFixed(4) +
                 "\n" +
-                parseFloat(item.longitude).toFixed(4)
+                parseFloat(item.longitude).toFixed(4),
+            draggable: true
         });
 
         marker.on("mouseover", function () {
@@ -178,20 +178,16 @@ function onMapClick(e) {
         marker = L.marker([latleng.lat, latleng.lng], {
             bounceOnAdd: true,
             bounceOnAddOptions: { duration: bounceDuration, height: bounceHeight, loop: 1 },
-            bounceOnAddCallback: function () {
-                console.log("done");
-            },
-            icon: greenIcon
+            icon: greenIcon,
+            draggable: true
         }).addTo(mymap);
 
     if (addBaseMode) {
         marker = L.marker([latleng.lat, latleng.lng], {
             bounceOnAdd: true,
             bounceOnAddOptions: { duration: bounceDuration, height: bounceHeight, loop: 1 },
-            bounceOnAddCallback: function () {
-                console.log("done");
-            },
-            icon: redIcon
+            icon: redIcon,
+            draggable: true
         }).addTo(mymap);
     }
 

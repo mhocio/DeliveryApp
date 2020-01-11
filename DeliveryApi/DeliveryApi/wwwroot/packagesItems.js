@@ -37,6 +37,14 @@ function addItem() {
             addLat.value = "";
             addLong.value = "";
             addSize.value = "";
+
+            const myNotification = window.createNotification({
+            });
+            myNotification({
+                message: item.name + " added!",
+                displayCloseButton: true,
+            });  
+
         })
         .catch(error => console.error("Unable to add item.", error));
 
@@ -46,11 +54,25 @@ function addItem() {
 }
 
 function deleteItem(id) {
-    fetch(`${uri}/${id}`, {
-        method: "DELETE"
-    })
-        .then(() => getItems())
-        .catch(error => console.error("Unable to delete item.", error));
+    fetch(uri + "/" + id)
+        .then(response => response.json())
+        .then(data => {
+            fetch(`${uri}/${id}`, {
+                method: "DELETE"
+            })
+                .then(() => {
+                    getItems();
+        
+                    const myNotification = window.createNotification({
+                    });
+                    myNotification({
+                        message: data.name + " deleted!",
+                        displayCloseButton: true,
+                    });
+                })
+                .catch(error => console.error("Unable to delete item.", error));
+        })
+        .catch(error => console.error("Unable to get item.", error));
 }
 
 function updateItem() {
