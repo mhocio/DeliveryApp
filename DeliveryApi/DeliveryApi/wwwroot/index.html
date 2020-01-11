@@ -15,8 +15,8 @@
             crossorigin=""></script>
 
     <script type="text/javascript" src="site.js"></script>
-    <script type="text/javascript" src="leaflet-color-markers.js"></script>
 
+    <script type="text/javascript" src="leaflet-color-markers.js"></script>
     <script type="text/javascript" src="L.Polyline.SnakeAnim.js"></script>
     <script type="text/javascript" src="Polyline.encoded.js"></script>
     <script type="text/javascript" src="bouncemarker.js"></script>
@@ -95,6 +95,36 @@
 
 </head>
 <body>
+
+    <button onclick="logInPress()" style="width:auto;" id="login">Login</button>
+    <button onclick="signUpPress()" style="width:auto;" id="signup">Sign Up</button>
+    <label id="user" style="display:none">Test</label>
+    <button onclick="logOutPress()" style="width:auto; display:none;" id="logout">Log Out</button>
+    <br />
+
+    <div id="id01" style="display: none">
+        <form id="logInForm" action="javascript:void(0);" method="get" onsubmit="logIn()">
+            <label for="uname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" id="uname" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="id02" style="display: none">
+        <form id="signUpForm" action="javascript:void(0);" method="post" onsubmit="signUp()">
+            <label for="uname_s"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" id="uname_s" required>
+
+            <label for="psw_s"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw_s" required>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+
     <div class="layout-container">
         <div id="mapid" class="map"></div>
 
