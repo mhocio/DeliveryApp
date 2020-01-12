@@ -45,9 +45,10 @@ namespace DeliveryApi.Controllers
         public async Task<ActionResult<UserItem>> GetUserItem(string user, string pw)
         {
             var userItem = await _context.UserItems.Where(x => x.Username == user).FirstAsync();
-            
+
             if (pw != userItem.Password)
-                return NotFound();
+                //return NotFound();
+                return BadRequest();
 
             if (userItem == null)
             {
