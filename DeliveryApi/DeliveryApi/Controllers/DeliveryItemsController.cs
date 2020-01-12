@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryApi.Models;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DeliveryApi.Controllers
 {
@@ -42,12 +46,11 @@ namespace DeliveryApi.Controllers
             return deliveryItem;
         }
 
-        // GET: api/DeliveryItems/Route
-        [HttpGet("Route")]
+        // GET: api/DeliveryItems/Route2
+        [HttpGet("Route2")]
         public ActionResult<List<PointItem>> GetDeliveryRoute()
         {
             var deliveriesItems = _context.DeliveryItems;
-
             List<PointItem> ret = new List<PointItem>();
 
             foreach (var item in deliveriesItems)
@@ -62,9 +65,7 @@ namespace DeliveryApi.Controllers
 
             var shuffled = ret.OrderBy(a => Guid.NewGuid()).ToList();
 
-            // Now we have just one base
             var bases = _context.BaseItems;
-
             foreach (var item in bases)
             {
                 PointItem point = new PointItem
@@ -74,8 +75,65 @@ namespace DeliveryApi.Controllers
                 };
                 shuffled.Insert(0, point);  //Instert base as the beggining of route
             }
-            
             return shuffled;
+        }
+
+        // GET: api/DeliveryItems/Route
+        // Reurns full json from OSRM Trip
+        [HttpGet("Route")]
+        public ActionResult<string> GetDeliveryRoutePolyline()
+        {
+            var deliveriesItems = _context.DeliveryItems;
+
+            string pointsString = "";
+
+            // Now we have just one base
+            var bases = _context.BaseItems;
+
+            foreach (var item in bases)
+            {
+                pointsString += item.Longitude;
+                pointsString += ",";
+                pointsString += item.Latitude;
+                pointsString += ";";
+            }
+
+            int i = 0;
+            int totalCount = deliveriesItems.Count();
+
+            foreach (var item in deliveriesItems)
+            {
+                i++;
+                pointsString += item.Longitude;
+                pointsString += ",";
+                pointsString += item.Latitude;
+                if (i < totalCount)
+                    pointsString += ";";
+            }
+
+            string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+
+            var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
+            httpWebRequestQR.ContentType = "application/json";
+            httpWebRequestQR.Method = "GET";
+
+            var httpResponseQR = (HttpWebResponse)httpWebRequestQR.GetResponse();
+
+            string jsonStringsign;
+            using (var streamReader = new StreamReader(httpResponseQR.GetResponseStream()))
+            {
+                var resultQR = streamReader.ReadToEnd();
+                jsonStringsign = resultQR;
+
+                //dynamic data = JObject.Parse(jsonStringsign);
+                //ret = data.trips[0].geometry.ToString();
+
+                // https://app.quicktype.io/#l=cs&r=json2csharp
+                // solution did not work
+                //OSRM_return = JsonConvert.DeserializeObject<OSRMTripReturnItem>(jsonStringsign);
+            }
+
+            return jsonStringsign;
         }
 
         // PUT: api/DeliveryItems/5

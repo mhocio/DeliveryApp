@@ -1,9 +1,10 @@
 var polyline = null; // route line
+// const uriRoute2 = "api/DeliveryItems/Routes2"; // old version calculating on user side
 
 function buttonShowRoute() {
     toDisplay = new Array();
 
-    fetch(uriRoute)
+    /*fetch(uriRoute2)
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -17,7 +18,7 @@ function buttonShowRoute() {
                     pointsString += ";";
                 }
             }
-            console.log(pointsString);
+            console.log("http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true");
 
             fetch(
                 "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true",
@@ -33,6 +34,17 @@ function buttonShowRoute() {
         .catch(error =>
             console.error("Unable to get packages to draw route.", error)
         );
+        */
+
+    fetch(uriRoute)
+        .then(response => response.json())
+        .then(data => {
+            //console.log(data);
+            _displayRouteFromPolyline(data);
+        })
+        .catch(error =>
+            console.error("Unable to to draw route.", error)
+        );
 }
 
 function clearRoute() {
@@ -44,7 +56,7 @@ function _displayRouteFromPolyline(data) {
     clearRoute();
 
     var encoded = data.trips[0].geometry;
-    console.log(encoded);
+    //console.log(encoded);
     polyline = L.Polyline.fromEncoded(encoded, {
         color: "#2A4B7C",
         clickable: "true",
