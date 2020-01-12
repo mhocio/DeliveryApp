@@ -1,3 +1,6 @@
+//const uriUser = 'api/Users';
+var currentUser;
+
 function logInPress() {
     var id01 = document.getElementById('id01');
     var id02 = document.getElementById('id02');
@@ -9,6 +12,9 @@ function logInPress() {
         id01.style.display = 'none';
     else
         id01.style.display = 'inline';
+
+    var user_err = document.getElementById('user_err');
+    user_err.style.display = 'none';
 }
 
 function signUpPress() {
@@ -22,6 +28,9 @@ function signUpPress() {
         id02.style.display = 'none';
     else
         id02.style.display = 'inline';
+
+    var user_err = document.getElementById('user_err');
+    user_err.style.display = 'none';
 }
 
 function logOutPress() {
@@ -31,10 +40,46 @@ function logOutPress() {
     signup.style.display = 'inline';
     var logout = document.getElementById('logout');
     logout.style.display = 'none';
+    var user_log = document.getElementById('user_log');
+    user_log.style.display = 'none';
     var user = document.getElementById('user');
     user.style.display = 'none';
     user.innerText = '';
     currentUser = '';
+    var user_actions = document.getElementById('user_actions');
+    user_actions.style.display = 'none';
+}
+
+function userDisplay(addUname) {
+    var user_log = document.getElementById('user_log');
+    user_log.style.display = 'inline';
+    currentUser = addUname.value.trim();
+    var user = document.getElementById('user');
+    user.style.display = 'inline';
+    user.textContent = currentUser;
+    var id01 = document.getElementById('id01');
+    id01.style.display = 'none';
+    var id02 = document.getElementById('id02');
+    id02.style.display = 'none';
+    var login = document.getElementById('login');
+    login.style.display = 'none';
+    var signup = document.getElementById('signup');
+    signup.style.display = 'none';
+    var logout = document.getElementById('logout');
+    logout.style.display = 'inline';
+    var user_actions = document.getElementById('user_actions');
+    user_actions.style.display = 'block';
+}
+
+function handleUserErrors(response) {
+    var user_err = document.getElementById('user_err');
+    if (!response.ok) {
+        user_err.style.display = 'inline';
+        user_err.textContent = "Wrong username or password!";
+        throw Error(response.statusText);
+    }
+    user_err.style.display = 'none';
+    return response;
 }
 
 function signUp() {
@@ -56,23 +101,9 @@ function signUp() {
     })
         .then(response => response.json())
         .then(() => {
-            currentUser = addUname.value.trim();
-            var user = document.getElementById('user');
-            user.style.display = 'inline';
-            user.textContent = currentUser;
+            userDisplay(addUname);
         })
         .catch(error => console.error('Unable to add item.', error));
-
-    var id01 = document.getElementById('id01');
-    id01.style.display = 'none';
-    var id02 = document.getElementById('id02');
-    id02.style.display = 'none';
-    var login = document.getElementById('login');
-    login.style.display = 'none';
-    var signup = document.getElementById('signup');
-    signup.style.display = 'none';
-    var logout = document.getElementById('logout');
-    logout.style.display = 'inline';
 }
 
 function logIn() {
@@ -82,23 +113,10 @@ function logIn() {
     var urilog = uriUser + "/byUser/" + logUname.value.trim() + "/" + logPsw.value.trim();
 
     fetch(urilog)
+        .then(handleUserErrors)
         .then(response => response.json())
         .then(() => {
-            currentUser = logUname.value.trim();
-            var user = document.getElementById('user');
-            user.style.display = 'inline';
-            user.textContent = currentUser;
+            userDisplay(logUname);
         })
         .catch(error => console.error('Unable to get item.', error));
-
-    var id01 = document.getElementById('id01');
-    id01.style.display = 'none';
-    var id02 = document.getElementById('id02');
-    id02.style.display = 'none';
-    var login = document.getElementById('login');
-    login.style.display = 'none';
-    var signup = document.getElementById('signup');
-    signup.style.display = 'none';
-    var logout = document.getElementById('logout');
-    logout.style.display = 'inline';
 }

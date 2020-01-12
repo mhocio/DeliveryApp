@@ -104,6 +104,10 @@
         #signup {
             background-color: azure;
         }
+
+        #user_err{
+           color: red;
+        }
     </style>
 
 </head>
@@ -112,8 +116,10 @@
 
     <button onclick="logInPress()" style="width:auto;" id="login">Login</button>
     <button onclick="signUpPress()" style="width:auto;" id="signup">Sign Up</button>
-    <label id="user" style="display:none">Test</label>
     <button onclick="logOutPress()" style="width:auto; display:none;" id="logout">Log Out</button>
+    <label id="user_log" style="display:none">Logged in as: </label>
+    <label id="user" style="display:none">Test</label>
+    <label id="user_err" style="display:none"></label>
     <br />
 
     <div id="id01" style="display: none">
@@ -136,6 +142,11 @@
             <input type="password" placeholder="Enter Password" id="psw_s" required>
             <button type="submit">Sign Up</button>
         </form>
+    </div>
+
+    <div id="user_actions" style="display: none">
+        <button class="action-button">Action 1</button>
+        <button class="action-button">Action 2</button>
     </div>
 
 
