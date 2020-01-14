@@ -95,6 +95,14 @@ function _displayItems(data) {
         deleteButton.innerText = "Delete";
         deleteButton.setAttribute("onclick", `deleteItem(${item.id})`);
 
+        let saveButton = button.cloneNode(false);
+        saveButton.innerText = "Save to Account";
+        saveButton.setAttribute("onclick", `saveItem(${item.id})`);
+
+        let excludeButton = button.cloneNode(false);
+        excludeButton.innerText = "Exclude from Route";
+        excludeButton.setAttribute("onclick", `excludeItem(${item.id})`);
+
         let tr = tBody.insertRow();
 
         let td1 = tr.insertCell(0);
@@ -118,6 +126,16 @@ function _displayItems(data) {
 
         let td6 = tr.insertCell(5);
         td6.appendChild(deleteButton);
+
+        let td7 = tr.insertCell(6);
+        td7.appendChild(saveButton);
+
+        let td8 = tr.insertCell(7);
+        td8.appendChild(excludeButton);
+
+        let td9 = tr.insertCell(8);
+        let userNode = document.createTextNode(item.username);
+        td9.appendChild(userNode);
 
         var marker = L.marker([item.latitude, item.longitude], {
             title:
@@ -157,6 +175,128 @@ function _displayItems(data) {
     });
 
     deliveries = data;
+    toRoute = deliveries;
+}
+
+function justDisplayItems(data) {
+    clearRoute();
+
+    const tBody = document.getElementById("deliveries");
+    tBody.innerHTML = "";
+
+    _displayCount(data.length);
+
+    if (data.length) {
+        document.getElementById("tableDeliveries").style.display = "table";
+    } else {
+        document.getElementById("tableDeliveries").style.display = "none";
+    }
+
+    const button = document.createElement("button");
+
+    markersLayer.clearLayers();
+
+    data.forEach(item => {
+        let editButton = button.cloneNode(false);
+        editButton.innerText = "Edit";
+        editButton.setAttribute("onclick", `displayEditForm(${item.id})`);
+
+        let deleteButton = button.cloneNode(false);
+        deleteButton.innerText = "Delete";
+        deleteButton.setAttribute("onclick", `deleteItem(${item.id})`);
+
+        let saveButton = button.cloneNode(false);
+        saveButton.innerText = "Save to Account";
+        saveButton.setAttribute("onclick", `saveItem(${item.id})`);
+
+        let excludeButton = button.cloneNode(false);
+        excludeButton.innerText = "Exclude from Route";
+        excludeButton.setAttribute("onclick", `excludeItem(${item.id})`);
+
+        let tr = tBody.insertRow();
+
+        let td1 = tr.insertCell(0);
+        let nameNode = document.createTextNode(item.name);
+        td1.appendChild(nameNode);
+
+        let td2 = tr.insertCell(1);
+        let latNode = document.createTextNode(item.latitude);
+        td2.appendChild(latNode);
+
+        let td3 = tr.insertCell(2);
+        let longNode = document.createTextNode(item.longitude);
+        td3.appendChild(longNode);
+
+        let td4 = tr.insertCell(3);
+        let sizeNode = document.createTextNode(item.size);
+        td4.appendChild(sizeNode);
+
+        let td5 = tr.insertCell(4);
+        td5.appendChild(editButton);
+
+        let td6 = tr.insertCell(5);
+        td6.appendChild(deleteButton);
+
+        let td7 = tr.insertCell(6);
+        td7.appendChild(saveButton);
+
+        let td8 = tr.insertCell(7);
+        td8.appendChild(excludeButton);
+
+        let td9 = tr.insertCell(8);
+        let userNode = document.createTextNode(item.username);
+        td9.appendChild(userNode);
+
+        var marker = L.marker([item.latitude, item.longitude], {
+            title:
+                "name: " +
+                item.name +
+                "\n" +
+                parseFloat(item.latitude).toFixed(4) +
+                "\n" +
+                parseFloat(item.longitude).toFixed(4),
+            draggable: true
+        });
+
+        marker.on("mouseover", function () {
+            marker.openPopup();
+        });
+
+        var div_element = document.createElement("div");
+
+        var p_element = document.createElement("p");
+        p_element.innerHTML += item.name;
+        var br_element = document.createElement("br");
+        p_element.appendChild(br_element);
+        p_element.innerHTML +=
+            parseFloat(item.latitude).toFixed(4) +
+            " " +
+            parseFloat(item.longitude).toFixed(4);
+        div_element.appendChild(p_element);
+
+        let deleteButtonFromPopup = document.createElement("button");
+        deleteButtonFromPopup.innerText = "Delete Item";
+        deleteButtonFromPopup.setAttribute("onclick", `deleteItem(${item.id})`);
+        div_element.appendChild(deleteButtonFromPopup);
+
+        marker.bindPopup(div_element);
+
+        marker.addTo(markersLayer);
+    });
+
+    toRoute = deliveries;
+}
+
+function clearTable() {
+    const tBody = document.getElementById("deliveries");
+    tBody.innerHTML = "";
+    document.getElementById("tableDeliveries").style.display = "none";
+    markersLayer.clearLayers();
+    toRoute = [];
+}
+
+function showAll() {
+    justDisplayItems(deliveries);
 }
 
 function markerOnClick(e) {
@@ -225,6 +365,8 @@ function loadMap() {
     markersBaseLayer = L.layerGroup().addTo(mymap);
 
     L.control.scale().addTo(mymap);
+
+    currentUser = '';
 }
 
 document.addEventListener("DOMContentLoaded", loadMap, false);

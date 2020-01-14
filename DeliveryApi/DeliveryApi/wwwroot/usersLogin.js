@@ -128,3 +128,9 @@ function logIn() {
         })
         .catch(error => console.error('Unable to get item.', error));
 }
+
+function displayMyDeli() {
+    const items = deliveries.filter(item => item.username === currentUser);
+    clearTable();
+    justDisplayItems(items);
+}
