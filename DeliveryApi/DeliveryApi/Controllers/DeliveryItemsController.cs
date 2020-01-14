@@ -10,6 +10,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections;
 
 namespace DeliveryApi.Controllers
 {
@@ -46,36 +47,22 @@ namespace DeliveryApi.Controllers
             return deliveryItem;
         }
 
-        // GET: api/DeliveryItems/Route2
-        [HttpGet("Route2")]
-        public ActionResult<List<PointItem>> GetDeliveryRoute()
+        public string CreatePointsString_toUrl(List<PointItem> pointItems)
         {
-            var deliveriesItems = _context.DeliveryItems;
-            List<PointItem> ret = new List<PointItem>();
+            string pointsString = "";
 
-            foreach (var item in deliveriesItems)
+            int i = 0;
+            foreach(var item in pointItems)
             {
-                PointItem point = new PointItem
-                {
-                    Latitude = item.Latitude,
-                    Longitude = item.Longitude
-                };
-                ret.Add(point);
+                i++;
+                pointsString += item.Longitude;
+                pointsString += ",";
+                pointsString += item.Latitude;
+                if (i < pointItems.Count())
+                    pointsString += ";";
             }
 
-            var shuffled = ret.OrderBy(a => Guid.NewGuid()).ToList();
-
-            var bases = _context.BaseItems;
-            foreach (var item in bases)
-            {
-                PointItem point = new PointItem
-                {
-                    Latitude = item.Latitude,
-                    Longitude = item.Longitude
-                };
-                shuffled.Insert(0, point);  //Instert base as the beggining of route
-            }
-            return shuffled;
+            return pointsString;
         }
 
         // GET: api/DeliveryItems/Route
@@ -83,34 +70,19 @@ namespace DeliveryApi.Controllers
         [HttpGet("Route")]
         public ActionResult<string> GetDeliveryRoutePolyline()
         {
-            var deliveriesItems = _context.DeliveryItems;
+            List<PointItem> pointItems = new List<PointItem>();
 
-            string pointsString = "";
-
-            // Now we have just one base
-            var bases = _context.BaseItems;
-
-            foreach (var item in bases)
+            foreach (var item in _context.BaseItems)
             {
-                pointsString += item.Longitude;
-                pointsString += ",";
-                pointsString += item.Latitude;
-                pointsString += ";";
+                pointItems.Add(new PointItem(item.Latitude, item.Longitude));
             }
 
-            int i = 0;
-            int totalCount = deliveriesItems.Count();
-
-            foreach (var item in deliveriesItems)
+            foreach (var item in _context.DeliveryItems)
             {
-                i++;
-                pointsString += item.Longitude;
-                pointsString += ",";
-                pointsString += item.Latitude;
-                if (i < totalCount)
-                    pointsString += ";";
+                pointItems.Add(new PointItem(item.Latitude, item.Longitude));
             }
 
+            string pointsString = CreatePointsString_toUrl(pointItems);
             string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
 
             var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
@@ -128,12 +100,166 @@ namespace DeliveryApi.Controllers
                 //dynamic data = JObject.Parse(jsonStringsign);
                 //ret = data.trips[0].geometry.ToString();
 
-                // https://app.quicktype.io/#l=cs&r=json2csharp
-                // solution did not work
-                //OSRM_return = JsonConvert.DeserializeObject<OSRMTripReturnItem>(jsonStringsign);
+                //System.Diagnostics.Debug.WriteLine(ret);
             }
 
             return jsonStringsign;
+        }
+
+        List<List<List<int>>> generateStirlingUnorderedPermutations(int n, int k)
+        // All possible ways of splitting a set of elements n into k sets
+        // Assumtion n >= k
+        {
+            List<List<List<int>>> result = new List<List<List<int>>>();
+
+            for (int i = 0; i < k; i++)
+            {
+                result.Add(new List<List<int>>());
+                result[0].Add(new List<int>());
+                result[0][i].Add(i);
+            }
+
+            System.Diagnostics.Debug.WriteLine(result);
+
+            int remaining = n - k;
+
+            // insert all missing values from k, k+1, ..., n
+            for (int i = 0; i < remaining; i++)
+            {
+                List<List<List<int>>> tmp = new List<List<List<int>>>();
+
+                // insert into each array
+                foreach(var _arr in result)
+                {
+                    // insert into each index of array
+                    for (int ii = 0; ii < _arr.Count(); ii++)
+                    {
+                        List<List<int>> newArr = new List<List<int>>();
+                        for (int copy_i = 0; copy_i < _arr.Count(); copy_i++)
+                        {
+                            newArr.Add(new List<int>());
+                            for (int j = 0; j < _arr[copy_i].Count(); j++)
+                                newArr[copy_i].Add(_arr[copy_i][j]);
+                        }
+
+                        newArr[ii].Add(i + k);
+                        tmp.Add(newArr);
+
+                        // debug
+                        /*
+                        System.Diagnostics.Debug.Write("(");
+                        foreach (var index in newArr)
+                        {
+                            foreach (var elem in index)
+                                System.Diagnostics.Debug.Write(elem + " ");
+                            System.Diagnostics.Debug.Write(";");
+                        }
+                        System.Diagnostics.Debug.Write("), ");
+                        */
+                        // debug
+                    }
+
+                }
+
+                System.Diagnostics.Debug.WriteLine("");
+                result = tmp;
+            }
+
+            return result;
+        }
+
+        List<string> getShortestKPathsStrings(List<PointItem> pointItems, List<PointItem> pointBases, int K)
+        {
+            List<string> result = new List<string>();
+            double minimumPathLength = double.MaxValue;
+
+            int itemsDeliveriesCount = pointItems.Count();
+
+            List<List<List<int>>> generatedPermutations = generateStirlingUnorderedPermutations(itemsDeliveriesCount, K);
+
+            foreach(var permuatation in generatedPermutations)
+            {
+                // debug
+                System.Diagnostics.Debug.Write("(");
+                foreach (var index in permuatation)
+                {
+                    foreach (var elem in index)
+                        System.Diagnostics.Debug.Write(elem + " ");
+                    System.Diagnostics.Debug.Write(";");
+                }
+                System.Diagnostics.Debug.Write("), ");
+                // debug
+
+                double currentLength = 0;
+                List<string> currentResult = new List<string>();
+
+                foreach(var index in permuatation)
+                {
+                    List<PointItem> requestItems = new List<PointItem>();
+
+                    // one Base
+                    requestItems.Add(pointBases[0]);
+                    for (int elem_i = 0; elem_i < index.Count(); elem_i++)
+                        requestItems.Add(pointItems[index[elem_i]]);
+
+                    string pointsString = CreatePointsString_toUrl(requestItems);
+                    string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+                    var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
+                    httpWebRequestQR.ContentType = "application/json";
+                    httpWebRequestQR.Method = "GET";
+
+                    var httpResponseQR = (HttpWebResponse)httpWebRequestQR.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponseQR.GetResponseStream()))
+                    {
+                        var resultQR = streamReader.ReadToEnd();
+                        string jsonStringsign = resultQR;
+
+                        dynamic data = JObject.Parse(jsonStringsign);
+                        string geometry = data.trips[0].geometry.ToString();
+                        string triplengthString = data.trips[0].distance.ToString();
+                        System.Diagnostics.Debug.WriteLine(triplengthString);
+                        double triplength = Convert.ToDouble(triplengthString);
+
+                        currentResult.Add(geometry);
+                        currentLength += triplength;
+
+                        //System.Diagnostics.Debug.WriteLine(geometry);
+                    }
+                }
+
+                if (currentLength < minimumPathLength)
+                {
+                    minimumPathLength = currentLength;
+                    result.Clear();
+                    foreach (var currentResultItem in currentResult)
+                        result.Add(currentResultItem);
+                }
+            }
+
+            return result;
+        }
+
+        // GET: api/DeliveryItems/Route/Several/0
+        // Reurns array of K full jsons from OSRM Trip
+        [HttpGet("Route/Several/{K}")]
+        public ActionResult<IEnumerable<string>> GetN_RoutesPolylines(int K)
+        {
+            List<PointItem> pointItems = new List<PointItem>();
+            List<PointItem> pointbases = new List<PointItem>();
+
+            foreach (var item in _context.BaseItems)
+            {
+                pointbases.Add(new PointItem(item.Latitude, item.Longitude));
+            }
+
+            foreach (var item in _context.DeliveryItems)
+            {
+                pointItems.Add(new PointItem(item.Latitude, item.Longitude));
+            }
+
+            List<string> lstring = getShortestKPathsStrings(pointItems, pointbases, K);
+
+            return lstring;
         }
 
         // PUT: api/DeliveryItems/5
