@@ -12,5 +12,6 @@ namespace DeliveryApi.Models
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public string Size { get; set; }
+        public string Username { get; set; }
     }
 }

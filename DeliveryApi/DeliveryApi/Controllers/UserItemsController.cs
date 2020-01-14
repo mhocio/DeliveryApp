@@ -44,11 +44,15 @@ namespace DeliveryApi.Controllers
         [HttpGet("byUser/{user}/{pw}")]
         public async Task<ActionResult<UserItem>> GetUserItem(string user, string pw)
         {
+            var checkUser = await _context.UserItems.Where(x => x.Username == user).AnyAsync();
+
+            if (checkUser == false)
+                return NotFound();
+
             var userItem = await _context.UserItems.Where(x => x.Username == user).FirstAsync();
 
             if (pw != userItem.Password)
                 return NotFound();
-                //return BadRequest();
 
             if (userItem == null)
             {

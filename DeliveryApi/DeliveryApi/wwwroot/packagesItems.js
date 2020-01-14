@@ -19,7 +19,8 @@ function addItem() {
         name: addName.value.trim(),
         latitude: addLat.value.trim(),
         longitude: addLong.value.trim(),
-        size: addSize.value.trim()
+        size: addSize.value.trim(),
+        username: currentUser
     };
 
     fetch(uri, {
@@ -82,7 +83,8 @@ function updateItem() {
         name: document.getElementById("edit-name").value.trim(),
         latitude: document.getElementById("edit-lat").value.trim(),
         longitude: document.getElementById("edit-long").value.trim(),
-        size: document.getElementById("edit-size").value.trim()
+        size: document.getElementById("edit-size").value.trim(),
+        username: currentUser
     };
 
     fetch(`${uri}/${itemId}`, {
@@ -99,4 +101,28 @@ function updateItem() {
     closeAllForms();
 
     return false;
+}
+
+function saveItem(id) {
+    const item = deliveries.find(item => item.id === id);
+    if (item.username == '') {
+        item.username = currentUser;
+
+        fetch(`${uri}/${item.id}`, {
+            method: "PUT",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(item)
+        })
+            .then(() => getItems())
+            .catch(error => console.error("Unable to delete item.", error));
+    }
+}
+
+function excludeItem(id) {
+    const excluded = toRoute.filter(item => item.id != id);
+    toRoute = excluded;
+    justDisplayItems(toRoute);
 }

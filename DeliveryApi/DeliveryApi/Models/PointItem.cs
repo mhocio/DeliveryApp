@@ -9,15 +9,5 @@ namespace DeliveryApi.Models
     {
         public string Latitude { get; set; }
         public string Longitude { get; set; }
-
-        public PointItem(string Latitude, string Longitude)
-        {
-            this.Latitude = Latitude;
-            this.Longitude = Longitude;
-        }
-
-        public PointItem()
-        {
-        }
     }
 }

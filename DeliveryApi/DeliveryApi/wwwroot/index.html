@@ -20,6 +20,7 @@
     <script type="text/javascript" src="routeDisplay.js"></script>
     <script type="text/javascript" src="packagesItems.js"></script>
     <script type="text/javascript" src="homeBase.js"></script>
+    <script type="text/javascript" src="sroute.js"></script>
 
     <script type="text/javascript" src="leaflet-color-markers.js"></script>
     <script type="text/javascript" src="L.Polyline.SnakeAnim.js"></script>
@@ -145,9 +146,25 @@
     </div>
 
     <div id="user_actions" style="display: none">
-        <button class="action-button">Action 1</button>
-        <button class="action-button">Action 2</button>
+        <button onclick="displayMyDeli()" class="action-button">Show My Deliveries</button>
+        <button onclick="SRsave()" class="action-button">Save Route</button>
+        <form action="javascript:void(0);" id="SRform" style="display: none" onsubmit="saveSRoute()">
+            <label for="SRname" id="SRnameLab">Save as: </label>
+            <input type="text" id="SRname" placeholder="Name"/>
+            <input type="submit" id="SRnameButt" value="Save"/> 
+        </form>
+        <button class="action-button">Update Current Route</button>
     </div>
+
+    <table id="tableSRoutes">
+        <tr>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+            <th>Usr</th>
+        </tr>
+        <tbody id="sroutes"></tbody>
+    </table>
 
 
     <div class="layout-container">
@@ -155,7 +172,9 @@
 
         <button onclick="buttonAddDelivery()" id="addDeliveryButton">Add a new delivery</button>
         <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
-        <button onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
+        <button onclick="buttonShowRouteExp()" id="showRouteButton">Show Route</button>
+        <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
+        <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
 
         <div id="addBaseForm">
             <h3>Add base</h3>
@@ -203,6 +222,9 @@
                 <th>Size</th>
                 <th></th>
                 <th></th>
+                <th></th>
+                <th></th>
+                <th>Usr</th>
             </tr>
             <tbody id="deliveries"></tbody>
         </table>
