@@ -74,9 +74,16 @@ function userDisplay(addUname) {
 function handleUserErrors(response) {
     var user_err = document.getElementById('user_err');
     if (!response.ok) {
-        user_err.style.display = 'inline';
-        user_err.textContent = "Wrong username or password!";
-        throw Error(response.statusText);
+        if (response.status == 404) {
+            user_err.style.display = 'inline';
+            user_err.textContent = "Wrong username or password!";
+            throw Error(response.statusText);
+        }
+        if (response.status = 400) {
+            user_err.style.display = 'inline';
+            user_err.textContent = "Username taken!";
+            throw Error(response.statusText);
+        }
     }
     user_err.style.display = 'none';
     return response;
@@ -99,6 +106,7 @@ function signUp() {
         },
         body: JSON.stringify(item)
     })
+        .then(handleUserErrors)
         .then(response => response.json())
         .then(() => {
             userDisplay(addUname);

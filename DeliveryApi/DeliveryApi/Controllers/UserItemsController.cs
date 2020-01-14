@@ -47,8 +47,8 @@ namespace DeliveryApi.Controllers
             var userItem = await _context.UserItems.Where(x => x.Username == user).FirstAsync();
 
             if (pw != userItem.Password)
-                //return NotFound();
-                return BadRequest();
+                return NotFound();
+                //return BadRequest();
 
             if (userItem == null)
             {
@@ -96,6 +96,11 @@ namespace DeliveryApi.Controllers
         [HttpPost]
         public async Task<ActionResult<UserItem>> PostUserItem(UserItem userItem)
         {
+            var checkUser = await _context.UserItems.Where(x => x.Username == userItem.Username).AnyAsync();
+
+            if (checkUser == true)
+                return BadRequest();
+
             _context.UserItems.Add(userItem);
             await _context.SaveChangesAsync();
 
