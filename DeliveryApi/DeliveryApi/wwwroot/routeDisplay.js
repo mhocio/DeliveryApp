@@ -66,6 +66,7 @@ function buttonShowRoute2() {
 function clearRoute() {
     if (polyline)
         mymap.removeLayer(polyline);
+    clearRouteSeveral();
 }
 
 function _displayRouteFromPolyline(data) {
@@ -87,7 +88,7 @@ function _displayRouteFromPolyline(data) {
 
 function buttonShowRoute() {
 
-    fetch(uriRouteSeveral + "2")
+    fetch(uriRouteSeveral + "1")
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -106,7 +107,7 @@ function clearRouteSeveral() {
 }
 
 function _displayRoutesFromPolylinesSeveral(data) {
-    clearRouteSeveral();
+    clearRoute();
     shuffle(colors);
     let i = 0;
     var bounds = L.bounds();
