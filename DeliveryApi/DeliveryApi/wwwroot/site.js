@@ -5,7 +5,6 @@ const uribase = "api/DeliveryItems/Base";
 const uriRoute = "api/DeliveryItems/Route";
 const uriUser = "api/Users";
 let deliveries = [];
-let toRoute = [];
 
 var mymap;
 var marker; // tmp marker to click while adding new base or delivery
