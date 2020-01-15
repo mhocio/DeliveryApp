@@ -49,6 +49,7 @@ function buttonShowRouteForUser() {
 function clearRoute() {
     if (polyline)
         mymap.removeLayer(polyline);
+  
     clearRouteSeveral();
 }
 
