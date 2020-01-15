@@ -1,8 +1,6 @@
 ﻿// JavaScript source code
 
 const uri = "api/DeliveryItems";
-const uribase = "api/DeliveryItems/Base";
-const uriRoute = "api/DeliveryItems/Route";
 const uriUser = "api/Users";
 let deliveries = [];
 

@@ -162,6 +162,13 @@
         <button onclick="buttonAddDelivery()" id="addDeliveryButton">Add a new delivery</button>
         <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
         <button onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
+
+        <form action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
+            <button type="submit" id="showRouteButton">Show several routes</button>
+            <input type="number" id="number-routes" placeholder="Number of routes" required>
+        </form>
+
+        <button onclick="buttonShowRouteForUser()" id="showRouteButton">Show Users Route</button>
         <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
         <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
 

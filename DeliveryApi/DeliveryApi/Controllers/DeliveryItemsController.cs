@@ -106,6 +106,43 @@ namespace DeliveryApi.Controllers
             return jsonStringsign;
         }
 
+        // GET: api/DeliveryItems/User/Route
+        // Reurns full json from OSRM Trip
+        [HttpGet("Route/{User}")]
+        public ActionResult<string> GetDeliveryRoutePolylineForUser(string User)
+        {
+            List<PointItem> pointItems = new List<PointItem>();
+
+            foreach (var item in _context.BaseItems)
+            {
+                pointItems.Add(new PointItem(item.Latitude, item.Longitude));
+            }
+
+            foreach (var item in _context.DeliveryItems)
+            {
+                if (item.Username == User)
+                    pointItems.Add(new PointItem(item.Latitude, item.Longitude));
+            }
+
+            string pointsString = CreatePointsString_toUrl(pointItems);
+            string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+
+            var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
+            httpWebRequestQR.ContentType = "application/json";
+            httpWebRequestQR.Method = "GET";
+
+            var httpResponseQR = (HttpWebResponse)httpWebRequestQR.GetResponse();
+
+            string jsonStringsign;
+            using (var streamReader = new StreamReader(httpResponseQR.GetResponseStream()))
+            {
+                var resultQR = streamReader.ReadToEnd();
+                jsonStringsign = resultQR;
+            }
+
+            return jsonStringsign;
+        }
+
         List<List<List<int>>> generateStirlingUnorderedPermutations(int n, int k)
         // All possible ways of splitting a set of elements n into k sets
         // Assumtion n >= k
