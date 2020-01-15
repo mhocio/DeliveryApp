@@ -90,6 +90,8 @@ namespace DeliveryApi.Controllers
             return NoContent();
         }
 
+        public string SessionUser { get; private set; }
+
         // POST: api/UserItems
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -102,6 +104,9 @@ namespace DeliveryApi.Controllers
                 return BadRequest();
 
             _context.UserItems.Add(userItem);
+
+            // HttpContext.Session.SetString(SessionUser, userItem.Username);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUserItem), new { id = userItem.Id }, userItem);

@@ -32,6 +32,21 @@ namespace DeliveryApi.Controllers
             return await _context.DeliveryItems.ToListAsync();
         }
 
+        // GET: api/DeliveryItems/User/{User}
+        [HttpGet("User/{User}")]
+        public ActionResult<IEnumerable<DeliveryItem>> GetDeliveryItems(string User)
+        {
+            List<DeliveryItem> deliveryItemsList = new List<DeliveryItem>();
+
+            foreach (var item in _context.DeliveryItems)
+            {
+                if (item.Username == User)
+                    deliveryItemsList.Add(item);
+            }
+
+            return deliveryItemsList;
+        }
+
         // GET: api/DeliveryItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DeliveryItem>> GetDeliveryItem(long id)
@@ -116,8 +131,11 @@ namespace DeliveryApi.Controllers
             {
                 if (item.Username == User)
                     pointItems.Add(new PointItem(item.Latitude, item.Longitude));
-                //TODO: else throw no base
             }
+
+            // if no base found...
+            if (pointItems.Count() == 0)
+                return NotFound();
 
             foreach (var item in _context.DeliveryItems)
             {
@@ -368,31 +386,36 @@ namespace DeliveryApi.Controllers
             return _context.DeliveryItems.Any(e => e.Id == id);
         }
 
+
         // --------------------------- BASE ---------------------------
 
+        public string SessionUser { get; private set; }
 
-        // GET: api/base/{User}
-        [HttpGet("Base/{User}")]
+        // GET: api/DeliveryItems/base/{User}
+        [HttpGet("Base/User/{User}")]
         public ActionResult<BaseDeliveryItem> GetBasesForUser(string User)
         {
-            //return await _context.BaseItems.ToListAsync();
-            foreach (var item in _context.BaseItems)
+            var item = _context.BaseItems.FirstOrDefault(elem => elem.Username == User);
+
+            if (item != null)
             {
-                if (item.Username == User)
-                    return item;
+                return item;
             }
+
+            var user = HttpContext.Session.GetString(SessionUser);
+            //System.Diagnostics.Debug.Write("SESSION: " + SessionUser);
 
             return NotFound();
         }
 
-        // GET: api/base
+        // GET: api/DeliveryItems/base
         [HttpGet("Base")]
         public async Task<ActionResult<IEnumerable<BaseDeliveryItem>>> GetBases()
         {
             return await _context.BaseItems.ToListAsync();
         }
 
-        // GET: api/base/1
+        // GET: api/DeliveryItems/base/1
         [HttpGet("Base/{id}")]
         public async Task<ActionResult<BaseDeliveryItem>> GetBaseItem(long id)
         {
@@ -406,7 +429,7 @@ namespace DeliveryApi.Controllers
             return item;
         }
 
-        // POST: api/base
+        // POST: api/DeliveryItems/base
         [HttpPost("Base")]
         public async Task<ActionResult<BaseDeliveryItem>> PostBase(BaseDeliveryItem baseItem)
         {
@@ -424,7 +447,7 @@ namespace DeliveryApi.Controllers
             return CreatedAtAction(nameof(GetBaseItem), new { id = baseItem.Id }, baseItem);
         }
 
-        // POST: api/base/User
+        // POST: api/DeliveryItems/base/User
         [HttpPost("Base/{User}")]
         public async Task<ActionResult<BaseDeliveryItem>> PostBaseForUser(string User, BaseDeliveryItem baseItem)
         {
