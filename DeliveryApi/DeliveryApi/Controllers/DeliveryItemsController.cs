@@ -19,7 +19,6 @@ namespace DeliveryApi.Controllers
     public class DeliveryItemsController : ControllerBase
     {
         private readonly DeliveryContext _context;
-        private readonly BaseDeliveriesContext BaseContext;
 
         public DeliveryItemsController(DeliveryContext context)
         {
@@ -106,7 +105,7 @@ namespace DeliveryApi.Controllers
             return jsonStringsign;
         }
 
-        // GET: api/DeliveryItems/User/Route
+        // GET: api/DeliveryItems/Route/{User}
         // Reurns full json from OSRM Trip
         [HttpGet("Route/{User}")]
         public ActionResult<string> GetDeliveryRoutePolylineForUser(string User)
@@ -115,7 +114,9 @@ namespace DeliveryApi.Controllers
 
             foreach (var item in _context.BaseItems)
             {
-                pointItems.Add(new PointItem(item.Latitude, item.Longitude));
+                if (item.Username == User)
+                    pointItems.Add(new PointItem(item.Latitude, item.Longitude));
+                //TODO: else throw no base
             }
 
             foreach (var item in _context.DeliveryItems)
@@ -367,8 +368,22 @@ namespace DeliveryApi.Controllers
             return _context.DeliveryItems.Any(e => e.Id == id);
         }
 
-        // BASE
+        // --------------------------- BASE ---------------------------
 
+
+        // GET: api/base/{User}
+        [HttpGet("Base/{User}")]
+        public ActionResult<BaseDeliveryItem> GetBasesForUser(string User)
+        {
+            //return await _context.BaseItems.ToListAsync();
+            foreach (var item in _context.BaseItems)
+            {
+                if (item.Username == User)
+                    return item;
+            }
+
+            return NotFound();
+        }
 
         // GET: api/base
         [HttpGet("Base")]
@@ -395,7 +410,7 @@ namespace DeliveryApi.Controllers
         [HttpPost("Base")]
         public async Task<ActionResult<BaseDeliveryItem>> PostBase(BaseDeliveryItem baseItem)
         {
-            foreach (var id in _context.BaseItems.Select(e => e.Id))
+            foreach (var id in _context.BaseItems.Select(elem => elem.Id))
             {
                 var entity = new BaseDeliveryItem { Id = id };
                 _context.BaseItems.Attach(entity);
@@ -406,7 +421,24 @@ namespace DeliveryApi.Controllers
             _context.BaseItems.Add(baseItem);
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetDeliveryItem", new { id = deliveryItem.Id }, deliveryItem);
+            return CreatedAtAction(nameof(GetBaseItem), new { id = baseItem.Id }, baseItem);
+        }
+
+        // POST: api/base/User
+        [HttpPost("Base/{User}")]
+        public async Task<ActionResult<BaseDeliveryItem>> PostBaseForUser(string User, BaseDeliveryItem baseItem)
+        {
+            var item = _context.BaseItems.FirstOrDefault(elem => elem.Username == User);
+
+            if (item != null)
+            {
+                _context.BaseItems.Remove(_context.BaseItems.Single(a => a.Username == User));
+                _context.SaveChanges();
+            }
+
+            _context.BaseItems.Add(baseItem);
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetBaseItem), new { id = baseItem.Id }, baseItem);
         }
     }

@@ -1,6 +1,5 @@
 var polyline = null; // route line
 // const uriRoute2 = "api/DeliveryItems/Routes2"; // old version calculating on user side
-const uribase = "api/DeliveryItems/Base";
 const uriRoute = "api/DeliveryItems/Route";
 const uriRouteSeveral = "api/DeliveryItems/Route/Several/";
 var PolylinesSeveral = [];
