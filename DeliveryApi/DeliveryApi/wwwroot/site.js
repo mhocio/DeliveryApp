@@ -14,10 +14,18 @@ var addMode = false;
 var editMode = false;
 var addBaseMode = false;
 
+
+function hideButtons() {
+    document.getElementById("addDeliveryButton").style.display = "none";
+    document.getElementById("addBaseButton").style.display = "none";
+}
+
 function buttonAddDelivery() {
     closeAllForms();
     document.getElementById("addForm").style.display = "block";
     addMode = true;
+
+    hideButtons();
 }
 
 function buttonAddBase() {
@@ -25,6 +33,8 @@ function buttonAddBase() {
     document.getElementById("addBaseForm").style.display = "block";
     addMode = false;
     addBaseMode = true;
+
+    hideButtons();
 }
 
 function displayEditForm(id) {
@@ -56,6 +66,9 @@ function closeAllForms() {
     addBaseMode = false;
     addMode = false;
     editMode = false;
+
+    document.getElementById("addDeliveryButton").style.display = "block";
+    document.getElementById("addBaseButton").style.display = "block";
 }
 
 function _displayCount(itemCount) {
