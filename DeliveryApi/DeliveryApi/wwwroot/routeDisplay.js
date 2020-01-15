@@ -1,5 +1,6 @@
 var polyline = null; // route line
 // const uriRoute2 = "api/DeliveryItems/Routes2"; // old version calculating on user side
+const uriRoute = "api/DeliveryItems/Route";
 const uriRouteSeveral = "api/DeliveryItems/Route/Several/";
 var PolylinesSeveral = [];
 var colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', 
@@ -17,42 +18,24 @@ function shuffle(a) {
     return a;
 }
 
-function buttonShowRoute2() {
+function buttonShowRoute() {
     toDisplay = new Array();
 
-    /*fetch(uriRoute2)
+    fetch(uriRoute)
         .then(response => response.json())
         .then(data => {
             console.log(data);
-
-            pointsString = "";
-            for (i = 0; i < data.length; i++) {
-                pointsString += data[i].longitude.toString();
-                pointsString += ",";
-                pointsString += data[i].latitude.toString();
-                if (i + 1 < data.length) {
-                    pointsString += ";";
-                }
-            }
-            console.log("http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true");
-
-            fetch(
-                "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true",
-                {}
-            )
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    _displayRouteFromPolyline(data);
-                })
-                .catch(error => console.error("Unable to fetch OSRM.", error));
+            _displayRouteFromPolyline(data);
         })
         .catch(error =>
-            console.error("Unable to get packages to draw route.", error)
+            console.error("Unable to to draw route.", error)
         );
-        */
+}
 
-    fetch(uriRoute)
+function buttonShowRouteForUser() {
+    toDisplay = new Array();
+
+    fetch(uriRoute + "/" + currentUser)
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -66,7 +49,7 @@ function buttonShowRoute2() {
 function clearRoute() {
     if (polyline)
         mymap.removeLayer(polyline);
-
+  
     clearRouteSeveral();
 }
 
@@ -87,9 +70,11 @@ function _displayRouteFromPolyline(data) {
     polyline.addTo(mymap).snakeIn();
 }
 
-function buttonShowRoute() {
+function buttonShowSeveralRoutes() {
 
-    fetch(uriRouteSeveral + "2")
+    let numberOfRoutes = document.getElementById("number-routes").value;
+
+    fetch(uriRouteSeveral + numberOfRoutes)
         .then(response => response.json())
         .then(data => {
             console.log(data);

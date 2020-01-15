@@ -1,3 +1,5 @@
+var markersBaseLayer; // base markers
+
 function getBase() {
     fetch(uribase)
         .then(response => response.json())
@@ -15,10 +17,11 @@ function addBase() {
 
     const item = {
         latitude: addLat.value.trim(),
-        longitude: addLong.value.trim()
+        longitude: addLong.value.trim(),
+        username: currentUser
     };
 
-    fetch(uribase, {
+    fetch(uribase + "/" + currentUser, {
         method: "POST",
         headers: {
             Accept: "application/json",

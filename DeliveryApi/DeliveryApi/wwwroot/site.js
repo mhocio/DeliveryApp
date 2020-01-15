@@ -1,17 +1,14 @@
 ﻿// JavaScript source code
 
 const uri = "api/DeliveryItems";
-const uribase = "api/DeliveryItems/Base";
-const uriRoute = "api/DeliveryItems/Route";
 const uriUser = "api/Users";
+const uribase = "api/DeliveryItems/Base";
 let deliveries = [];
 
 var mymap;
 var marker; // tmp marker to click while adding new base or delivery
-var isUpdated;
 
 var markersLayer; // deliveries markers
-var markersBaseLayer; // base markers
 
 var addMode = false;
 var editMode = false;
@@ -47,7 +44,6 @@ function displayEditForm(id) {
         mymap.removeLayer(marker);
     }
     marker = L.marker([item.latitude, item.longitude]).addTo(mymap);
-    isUpdated = true;
 }
 
 function closeAllForms() {
@@ -359,7 +355,6 @@ function loadMap() {
     ).addTo(mymap);
 
     mymap.on("click", onMapClick);
-    isUpdated = false;
 
     markersLayer = L.layerGroup().addTo(mymap);
     markersBaseLayer = L.layerGroup().addTo(mymap);

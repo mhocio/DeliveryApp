@@ -83,7 +83,8 @@ function updateItem() {
         name: document.getElementById("edit-name").value.trim(),
         latitude: document.getElementById("edit-lat").value.trim(),
         longitude: document.getElementById("edit-long").value.trim(),
-        size: document.getElementById("edit-size").value.trim()
+        size: document.getElementById("edit-size").value.trim(),
+        username: currentUser
     };
 
     fetch(`${uri}/${itemId}`, {
