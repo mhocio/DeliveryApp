@@ -1,10 +1,17 @@
 var markersBaseLayer; // base markers
 
 function getBase() {
-    fetch(uribase)
+    var ending = "";
+    if (currentUser != '')
+        ending = "/User/" + currentUser
+
+    fetch(uribase + ending)
         .then(response => response.json())
         .then(data => _displayBase(data))
-        .catch(error => console.error("Unable to get items.", error));
+        .catch(error => {
+            console.error("Unable to get items.", error);
+            markersBaseLayer.clearLayers();
+        });
 }
 
 function addBase() {
@@ -46,26 +53,30 @@ function _displayBase(data) {
     clearRoute();
     markersBaseLayer.clearLayers();
 
-    data.forEach(item => {
-        var markerBase = L.marker([item.latitude, item.longitude], {
-            title:
-                "Base" +
-                "\n" +
-                parseFloat(item.latitude).toFixed(4) +
-                "\n" +
-                parseFloat(item.longitude).toFixed(4),
-            icon: redIcon
-        }).addTo(mymap);
+    if (Array.isArray(data))
+        data = data[0]
 
-        markerBase.on("click", markerOnClick).addTo(mymap);
-        markerBase.bindPopup(
+    if (data == null)
+        return;
+
+    var markerBase = L.marker([data.latitude, data.longitude], {
+        title:
             "Base" +
-            +"\n" +
-            parseFloat(item.latitude).toFixed(4) +
             "\n" +
-            parseFloat(item.longitude).toFixed(4)
-        );
+            parseFloat(data.latitude).toFixed(4) +
+            "\n" +
+            parseFloat(data.longitude).toFixed(4),
+        icon: redIcon
+    }).addTo(mymap);
 
-        markerBase.addTo(markersBaseLayer);
-    });
+    markerBase.on("click", markerOnClick).addTo(mymap);
+    markerBase.bindPopup(
+        "Base" +
+        +"\n" +
+        parseFloat(data.latitude).toFixed(4) +
+        "\n" +
+        parseFloat(data.longitude).toFixed(4)
+    );
+
+    markerBase.addTo(markersBaseLayer);
 }

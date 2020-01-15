@@ -1,5 +1,5 @@
 //const uriUser = 'api/Users';
-var currentUser;
+var currentUser = "";
 
 function logInPress() {
     var id01 = document.getElementById('id01');
@@ -48,6 +48,9 @@ function logOutPress() {
     currentUser = '';
     var user_actions = document.getElementById('user_actions');
     user_actions.style.display = 'none';
+
+    getItems();
+    getBase();
 }
 
 function userDisplay(addUname) {
@@ -69,6 +72,9 @@ function userDisplay(addUname) {
     logout.style.display = 'inline';
     var user_actions = document.getElementById('user_actions');
     user_actions.style.display = 'block';
+
+    getItems();
+    getBase();
 }
 
 function handleUserErrors(response) {

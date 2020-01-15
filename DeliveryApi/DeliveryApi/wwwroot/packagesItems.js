@@ -1,5 +1,10 @@
 function getItems() {
-    fetch(uri)
+    var ending = "";
+
+    if (currentUser != "")
+        ending = "/User/" + currentUser;
+
+    fetch(uri + ending)
         .then(response => response.json())
         .then(data => _displayItems(data))
         .catch(error => console.error("Unable to get items.", error));
