@@ -14,27 +14,38 @@ var addMode = false;
 var editMode = false;
 var addBaseMode = false;
 
+const bounceHeight = 30;
+const bounceDuration = 350;
 
-function hideButtons() {
-    document.getElementById("addDeliveryButton").style.display = "none";
-    document.getElementById("addBaseButton").style.display = "none";
-}
 
 function buttonAddDelivery() {
-    closeAllForms();
-    document.getElementById("addForm").style.display = "block";
-    addMode = true;
+    closeEditForm();
+    addBaseMode = false;
 
-    hideButtons();
+    var lat = document.getElementById("add-lat").value;
+    var lng = document.getElementById("add-long").value;
+    addNewItemMarker(lat, lng);
+
+    if (addMode == false) {
+        addMode = true;
+    } else {
+        closeAllForms();
+    }
 }
 
 function buttonAddBase() {
-    closeAllForms();
-    document.getElementById("addBaseForm").style.display = "block";
+    closeEditForm();
     addMode = false;
-    addBaseMode = true;
 
-    hideButtons();
+    var lat = document.getElementById("add-base-lat").value;
+    var lng = document.getElementById("add-base-long").value;
+    addBaseMarker(lat, lng);
+
+    if (!addBaseMode) {
+        addBaseMode = true;
+    } else {
+        closeAllForms();
+    }
 }
 
 function displayEditForm(id) {
@@ -56,19 +67,25 @@ function displayEditForm(id) {
     marker = L.marker([item.latitude, item.longitude]).addTo(mymap);
 }
 
-function closeAllForms() {
-    document.getElementById("addForm").style.display = "none";
-    document.getElementById("addBaseForm").style.display = "none";
+function closeEditForm() {
+    if (marker)
+            mymap.removeLayer(marker);
+    editMode = false;
     document.getElementById("editForm").style.display = "none";
+}
+
+function closeAllForms() {
+    $('.panel-collapse')
+        .collapse('hide');
+
     if (marker) {
         mymap.removeLayer(marker);
     }
     addBaseMode = false;
     addMode = false;
     editMode = false;
-
-    document.getElementById("addDeliveryButton").style.display = "block";
-    document.getElementById("addBaseButton").style.display = "block";
+    
+    document.getElementById("editForm").style.display = "none";
 }
 
 function _displayCount(itemCount) {
@@ -106,6 +123,9 @@ function _displayItems(data) {
 
         let deleteButton = button.cloneNode(false);
         deleteButton.innerText = "Delete";
+        deleteButton.classList.add("btn");
+        deleteButton.classList.add("btn-outline-danger");
+        deleteButton.classList.add("btn-sm");
         deleteButton.setAttribute("onclick", `deleteItem(${item.id})`);
 
         let saveButton = button.cloneNode(false);
@@ -320,40 +340,25 @@ function markerOnClick(e) {
 function onMapClick(e) {
     var latleng = e.latlng;
 
-    if (marker) {
-        mymap.removeLayer(marker);
+    if (addMode) {
+        document.getElementById("add-lat").value = parseFloat(latleng.lat).toFixed(6);
+        document.getElementById("add-long").value = parseFloat(latleng.lng).toFixed(6);
+    } else if (editMode) {
+        document.getElementById("edit-lat").value = parseFloat(latleng.lat).toFixed(6);
+        document.getElementById("edit-long").value = parseFloat(latleng.lng).toFixed(6);
+    } else if (addBaseMode) {
+        document.getElementById("add-base-lat").value = parseFloat(latleng.lat).toFixed(6);
+        document.getElementById("add-base-long").value = parseFloat(latleng.lng).toFixed(6);
     }
 
-    let bounceHeight = 30;
-    let bounceDuration = 350;
+    if (marker)
+        mymap.removeLayer(marker);
 
     if (addMode || editMode)
-        marker = L.marker([latleng.lat, latleng.lng], {
-            bounceOnAdd: true,
-            bounceOnAddOptions: { duration: bounceDuration, height: bounceHeight, loop: 1 },
-            icon: greenIcon,
-            draggable: true
-        }).addTo(mymap);
+        addNewItemMarker(latleng.lat, latleng.lng);
 
-    if (addBaseMode) {
-        marker = L.marker([latleng.lat, latleng.lng], {
-            bounceOnAdd: true,
-            bounceOnAddOptions: { duration: bounceDuration, height: bounceHeight, loop: 1 },
-            icon: redIcon,
-            draggable: true
-        }).addTo(mymap);
-    }
-
-    if (addMode) {
-        document.getElementById("add-lat").value = latleng.lat;
-        document.getElementById("add-long").value = latleng.lng;
-    } else if (editMode) {
-        document.getElementById("edit-lat").value = latleng.lat;
-        document.getElementById("edit-long").value = latleng.lng;
-    } else if (addBaseMode) {
-        document.getElementById("add-base-lat").value = latleng.lat;
-        document.getElementById("add-base-long").value = latleng.lng;
-    }
+    if (addBaseMode)
+        addBaseMarker(latleng.lat, latleng.lng);
 }
 
 function loadMap() {
@@ -386,7 +391,6 @@ function loadMap() {
         }
     
         var key = event.key || event.keyCode;
-    
         if (key === 'Escape' || key === 'Esc' || key === 27) {
             console.log("click ESC");
             closeOverlay();

@@ -21,6 +21,7 @@
 
     <script type="text/javascript" src="overlay.js"></script>
     <script type="text/javascript" src="site.js"></script>
+    <script type="text/javascript" src="addMarkers.js"></script>
     <script type="text/javascript" src="usersLogin.js"></script>
     <script type="text/javascript" src="routeDisplay.js"></script>
     <script type="text/javascript" src="packagesItems.js"></script>
@@ -71,14 +72,6 @@
             margin-left: 7%;
         }
 
-        #addForm {
-            display: none;
-        }
-
-        #addBaseForm {
-            display: none;
-        }
-
         #signup {
             background-color: azure;
         }
@@ -106,10 +99,12 @@
                         <a class="nav-link" href="#">Link</a>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="btn btn-outline-light mr-2 text-nowrap" onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
+                        <button type="button" class="btn btn-outline-light mr-2 text-nowrap" 
+                        onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="btn btn-success text-nowrap" onclick="buttonShowRouteForUser()" id="showRouteButton">Show Users Route</button>
+                        <button type="button" class="btn btn-success text-nowrap" 
+                        onclick="buttonShowRouteForUser()" id="showRouteButton">Show Users Route</button>
                     </li>
                 </ul>
 
@@ -126,7 +121,8 @@
                         <span id="user" class="navbar-brand text-white bg-dark" style="display:none">Test</span>
                     </li>
                     <li class="nav-item">
-                        <button onclick="logOutPress()" class="btn btn-dark border border-info" style="display:none;" id="logout">Log Out</button>
+                        <button onclick="logOutPress()" class="btn btn-dark border border-info" 
+                        style="display:none;" id="logout">Log Out</button>
                     </li>
                 </ul>
                 
@@ -202,69 +198,58 @@
 
         <br>
 
-        <div id="mapid" class="map"></div>
-
-        <button onclick="buttonAddDelivery()" class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" id="addDeliveryButton">Add a new delivery</button>
-        <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
-        
-
-        
-        <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
-        <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
-
-        
-          <div id="addBaseForm">
-            <h3>Add base</h3>
-            <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
-                <input type="text" id="add-base-lat" placeholder="Latitude" required>
-                <input type="text" id="add-base-long" placeholder="Longitude" required>
-                <input type="submit" value="Add">
-                <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
-            </form>
-        </div>
+        <div id="mapid" class="map"></div>        
+          
 
         <div class="accordion md-accordion" id="accordionExample">
 
             <div class="card ">
               <div class="card-header" id="headingOne">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                  <button onclick="buttonAddDelivery()" id="addDeliveryButton" class="btn btn-link" 
+                  type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     Add new delivery
                   </button>
               </div>
-              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div id="collapseOne" class="collapse panel-collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    <div id="addForm">
+                        <h3>Add a new delivery</h3>
+                        <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+                            <input type="text" id="add-name" placeholder="Name" required>
+                            <input type="text" id="add-lat" placeholder="Latitude" required>
+                            <input type="text" id="add-long" placeholder="Longitude" required>
+                            <input type="number" id="add-size" placeholder="Size" required>
+                            <input type="submit" value="Add">
+                            <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+                        </form>
+                    </div>
                 </div>
               </div>
             </div>
 
             <div class="card ">
               <div class="card-header" id="headingTwo">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" 
+                  aria-expanded="false" aria-controls="collapseTwo"onclick="buttonAddBase()" id="addBaseButton">
                     Add base
                   </button>
               </div>
-              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+              <div id="collapseTwo" class="collapse panel-collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                 <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    <div id="addBaseForm">
+                        <h3>Add base</h3>
+                        <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
+                            <input type="text" id="add-base-lat" placeholder="Latitude" required>
+                            <input type="text" id="add-base-long" placeholder="Longitude" required>
+                            <input type="submit" value="Add">
+                            <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+                        </form>
+                    </div>
                 </div>
               </div>
             </div>
-            
           </div>
-
-
-          <div id="addForm">
-            <h3>Add a new delivery</h3>
-            <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-                <input type="text" id="add-name" placeholder="Name" required>
-                <input type="text" id="add-lat" placeholder="Latitude" required>
-                <input type="text" id="add-long" placeholder="Longitude" required>
-                <input type="number" id="add-size" placeholder="Size" required>
-                <input type="submit" value="Add">
-                <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
-            </form>
-        </div>
+          
 
         <div id="editForm" class="form-inline card card-body">
             <h3>Edit the delivery</h3>
@@ -299,6 +284,9 @@
             </thread>
             <tbody id="deliveries"></tbody>
         </table>
+
+        <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
+        <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
 
     </div>
 
