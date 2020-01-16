@@ -23,6 +23,7 @@
     <script type="text/javascript" src="site.js"></script>
     <script type="text/javascript" src="addMarkers.js"></script>
     <script type="text/javascript" src="usersLogin.js"></script>
+    <script type="text/javascript" src="displayItems.js"></script>
     <script type="text/javascript" src="routeDisplay.js"></script>
     <script type="text/javascript" src="packagesItems.js"></script>
     <script type="text/javascript" src="homeBase.js"></script>
@@ -219,7 +220,7 @@
                             <input type="text" id="add-lat" placeholder="Latitude" required>
                             <input type="text" id="add-long" placeholder="Longitude" required>
                             <input type="number" id="add-size" placeholder="Size" required>
-                            <input type="submit" value="Add">
+                            <input id="AddItemInFormButton" type="submit" value="Add">
                             <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
                         </form>
                     </div>
@@ -259,7 +260,7 @@
                 <input class="form-control" type="text" id="edit-lat" placeholder="Latitude" required>
                 <input class="form-control" type="text" id="edit-long" placeholder="Longitude" required>
                 <input class="form-control" type="number" id="edit-size" placeholder="Size" required>
-                <input class="btn btn-outline-success" type="submit" value="Save">
+                <input class="btn btn-outline-success" type="submit" id="EditItemInFormButton" value="Save">
                 <button type="button" class="close float-rigth" aria-label="Close edit form" onclick="closeAllForms()">
                     <span aria-hidden="true">&times;</span>
                 </button>

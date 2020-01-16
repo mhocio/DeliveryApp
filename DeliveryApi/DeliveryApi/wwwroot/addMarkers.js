@@ -23,6 +23,16 @@ function addBaseMarker(lat, lng) {
     }
 }
 
+function redirectAddNewItem() {
+    var button = document.getElementById("AddItemInFormButton");
+    button.click();
+}
+
+function redirectEditItem() {
+    var button = document.getElementById("EditItemInFormButton");
+    button.click();
+}
+
 function addNewItemMarker(lat, lng) {
     if (lat != 0 && lng != 0) {
         marker = L.marker([lat, lng], {
@@ -32,14 +42,30 @@ function addNewItemMarker(lat, lng) {
             draggable: true
         }).addTo(mymap).openPopup();
 
-        marker.openPopup();
-
+          
+          if (addMode) {
+            var div_element = document.createElement("div");
+            let newItemInPopupButton = document.createElement("button");
+            newItemInPopupButton.innerText = "New Item";
+            newItemInPopupButton.setAttribute("onclick", "redirectAddNewItem()");
+            div_element.appendChild(newItemInPopupButton);
+            marker.bindPopup(div_element);
+        } else if (editMode) {
+            var div_element = document.createElement("div");
+            let editItemInPopupButton = document.createElement("button");
+            editItemInPopupButton.innerText = "Submit change";
+            editItemInPopupButton.setAttribute("onclick", "redirectEditItem()");
+            div_element.appendChild(editItemInPopupButton);
+            marker.bindPopup(div_element);
+        }
+        
         marker.on('dragend', function(event) {
             var position = marker.getLatLng();
-        
+            marker.openPopup();
+
             marker.setLatLng(position, {
               draggable: 'true'
-            }).bindPopup(position).update();
+            }).update();
 
             console.log("drag end");
             console.log(position);
@@ -52,5 +78,7 @@ function addNewItemMarker(lat, lng) {
                 document.getElementById("edit-long").value = parseFloat(position.lng).toFixed(6);
             }
           });
+
+          marker.openPopup();
     }
 }
