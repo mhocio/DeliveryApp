@@ -136,19 +136,22 @@
     <div class="layout-container ">
 
         <div class="overlay" id="overlay">
-            <form class="border border-light p-5 formLogin overlay-inner">
-                <p class="h4 mb-4 text-center">Login</p>
-            
-                <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
-                <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
-                <button class="btn btn-info btn-block my-4" type="submit">Login</button>
-            
-                <div class="text-center">
-                    <p>Not a member?
-                        <a href="">Register</a>
-                    </p>
-                </div>
-            </form>
+            <div class="card">
+
+                <form class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
+                    <p class="h4 mb-4 text-center">Login</p>
+                
+                    <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
+                    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Login</button>
+                
+                    <div class="text-center">
+                        <p>Not a member?
+                            <a href="">Register</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
         </div>
         
         
@@ -192,7 +195,7 @@
 
         <div>
             <form class="form-inline" action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
-                <button class="btn btn-outline-primary mr-3" type="submit" id="showRouteButton">Show several routes</button>
+                <button class="btn btn-outline-primary mr-3 " type="submit" id="showRouteButton">Show several routes</button>
                 <input class="form-control" type="number" id="number-routes" placeholder="Number of routes" required>
             </form>
         </div>
@@ -201,7 +204,7 @@
 
         <div id="mapid" class="map"></div>
 
-        <button onclick="buttonAddDelivery()" id="addDeliveryButton">Add a new delivery</button>
+        <button onclick="buttonAddDelivery()" class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" id="addDeliveryButton">Add a new delivery</button>
         <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
         
 
@@ -219,6 +222,37 @@
                 <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
             </form>
         </div>
+
+        <div class="accordion md-accordion" id="accordionExample">
+
+            <div class="card ">
+              <div class="card-header" id="headingOne">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Add new delivery
+                  </button>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+
+            <div class="card ">
+              <div class="card-header" id="headingTwo">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Add base
+                  </button>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
 
           <div id="addForm">
             <h3>Add a new delivery</h3>
@@ -267,6 +301,13 @@
         </table>
 
     </div>
+
+    <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+        <div class="container text-center">
+          <small>2020 Copyright &copy; Mikołaj Hościło & Filip Szymczak</small>
+          <a href="https://github.com/mhocio/DeliveryApp">github</a>
+        </div>
+      </footer>
 
     <script type="text/javascript">
         getItems();

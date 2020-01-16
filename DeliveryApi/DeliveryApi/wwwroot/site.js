@@ -158,7 +158,7 @@ function _displayItems(data) {
                 parseFloat(item.latitude).toFixed(4) +
                 "\n" +
                 parseFloat(item.longitude).toFixed(4),
-            draggable: true
+            //draggable: true
         });
 
         marker.on("mouseover", function () {
