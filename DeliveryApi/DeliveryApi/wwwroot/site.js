@@ -44,8 +44,8 @@ function displayEditForm(id) {
     const item = deliveries.find(item => item.id === id);
 
     document.getElementById("edit-name").value = item.name;
-    document.getElementById("edit-lat").value = item.latitude;
-    document.getElementById("edit-long").value = item.longitude;
+    document.getElementById("edit-lat").value = parseFloat(item.latitude).toFixed(6);
+    document.getElementById("edit-long").value = parseFloat(item.longitude).toFixed(6);
     document.getElementById("edit-size").value = item.size;
     document.getElementById("edit-id").value = item.id;
     document.getElementById("editForm").style.display = "block";
@@ -119,11 +119,11 @@ function _displayItems(data) {
         td1.appendChild(nameNode);
 
         let td2 = tr.insertCell(1);
-        let latNode = document.createTextNode(item.latitude);
+        let latNode = document.createTextNode(parseFloat(item.latitude).toFixed(6));
         td2.appendChild(latNode);
 
         let td3 = tr.insertCell(2);
-        let longNode = document.createTextNode(item.longitude);
+        let longNode = document.createTextNode(parseFloat(item.longitude).toFixed(6));
         td3.appendChild(longNode);
 
         let td4 = tr.insertCell(3);
