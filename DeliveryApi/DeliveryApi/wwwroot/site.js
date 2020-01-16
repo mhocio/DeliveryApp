@@ -97,7 +97,11 @@ function _displayItems(data) {
 
     data.forEach(item => {
         let editButton = button.cloneNode(false);
+        editButton.style = "btn btn-secondary";
         editButton.innerText = "Edit";
+        editButton.classList.add("btn");
+        editButton.classList.add("btn-secondary");
+        editButton.classList.add("btn-sm");
         editButton.setAttribute("onclick", `displayEditForm(${item.id})`);
 
         let deleteButton = button.cloneNode(false);
@@ -375,6 +379,27 @@ function loadMap() {
     L.control.scale().addTo(mymap);
 
     currentUser = '';
+
+    document.addEventListener('keyup', function (event) {
+        if (event.defaultPrevented) {
+            return;
+        }
+    
+        var key = event.key || event.keyCode;
+    
+        if (key === 'Escape' || key === 'Esc' || key === 27) {
+            console.log("click ESC");
+            closeOverlay();
+        }
+    });
+
+    overlay = document.getElementById('overlay');
+    overlay.addEventListener('click', function (event) {
+
+        if (event.target.querySelector('.overlay-inner') != null) {
+            closeOverlay();
+        }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", loadMap, false);

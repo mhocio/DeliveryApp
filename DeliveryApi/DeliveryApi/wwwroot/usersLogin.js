@@ -15,6 +15,9 @@ function logInPress() {
 
     var user_err = document.getElementById('user_err');
     user_err.style.display = 'none';
+
+    overlay = document.getElementById('overlay');
+    overlay.classList.add('open');
 }
 
 function signUpPress() {

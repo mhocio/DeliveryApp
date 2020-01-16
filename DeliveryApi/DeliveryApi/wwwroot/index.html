@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="overlay.css">
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap-4.4.1-dist/css/bootstrap.min.css" rel="stylesheet">     
@@ -18,6 +19,7 @@
         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
         crossorigin=""></script>
 
+    <script type="text/javascript" src="overlay.js"></script>
     <script type="text/javascript" src="site.js"></script>
     <script type="text/javascript" src="usersLogin.js"></script>
     <script type="text/javascript" src="routeDisplay.js"></script>
@@ -90,6 +92,7 @@
 
 <body>
 
+
     <nav class="navbar navbar-dark bg-dark navbar-expand-md bg-faded justify-content-center fixed-top">
             <span class="navbar-brand mb-0 h1">delivery packages </span>
 
@@ -131,6 +134,25 @@
     </nav>
 
     <div class="layout-container ">
+
+        <div class="overlay" id="overlay">
+            <form class="border border-light p-5 formLogin overlay-inner">
+                <p class="h4 mb-4 text-center">Login</p>
+            
+                <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
+                <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+                <button class="btn btn-info btn-block my-4" type="submit">Login</button>
+            
+                <div class="text-center">
+                    <p>Not a member?
+                        <a href="">Register</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+        
+        
+
         
         <label id="user_err" style="display:none"></label>
         <br />
@@ -168,17 +190,20 @@
             <button class="action-button">Update Current Route</button>
         </div>
 
+        <div>
+            <form class="form-inline" action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
+                <button class="btn btn-outline-primary mr-3" type="submit" id="showRouteButton">Show several routes</button>
+                <input class="form-control" type="number" id="number-routes" placeholder="Number of routes" required>
+            </form>
+        </div>
+
+        <br>
 
         <div id="mapid" class="map"></div>
 
         <button onclick="buttonAddDelivery()" id="addDeliveryButton">Add a new delivery</button>
         <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
         
-
-        <form action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
-            <button type="submit" id="showRouteButton">Show several routes</button>
-            <input type="number" id="number-routes" placeholder="Number of routes" required>
-        </form>
 
         
         <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
