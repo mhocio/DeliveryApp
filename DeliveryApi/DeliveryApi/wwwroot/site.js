@@ -312,4 +312,14 @@ function loadMap() {
     });
 }
 
+function ThrowLogo() {
+    const element = document.getElementById("FakeLogo");
+    element.classList.add("hinge");
+
+    element.addEventListener('animationend', function() 
+    { 
+        document.getElementById("FakeLogo").style.display = "none"; 
+    })
+}
+
 document.addEventListener("DOMContentLoaded", loadMap, false);
