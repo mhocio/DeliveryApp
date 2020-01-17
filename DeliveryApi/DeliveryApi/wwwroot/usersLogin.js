@@ -54,6 +54,8 @@ function logOutPress() {
 
     getItems();
     getBase();
+
+    document.getElementById("showRouteUserButton").classList.remove("pulse");
 }
 
 function userDisplay(addUname) {
@@ -134,6 +136,7 @@ function logIn() {
         .then(response => response.json())
         .then(() => {
             userDisplay(logUname);
+            document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to get item.', error));
 }

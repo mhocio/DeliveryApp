@@ -8,6 +8,7 @@
 
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="overlay.css">
+    <link rel="stylesheet" href="styles.css">
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap-4.4.1-dist/css/bootstrap.min.css" rel="stylesheet">     
@@ -37,6 +38,26 @@
 
 
     <style>
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  margin-top: 60px;
+}
+
         input[type='submit'],
         button,
         [aria-label] {
@@ -51,9 +72,15 @@
             display: none;
         }
 
-        body {
-            margin-top: 60px;
-        }
+        .footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
 
 
         .map {
@@ -71,10 +98,6 @@
             grid-template-columns: 1fr;
             margin-right: 7%;
             margin-left: 7%;
-        }
-
-        #signup {
-            background-color: azure;
         }
 
         #user_err{
@@ -106,16 +129,16 @@
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-success text-nowrap" 
-                        onclick="buttonShowRouteForUser()" id="showRouteButton">Show Users Route</button>
+                        onclick="buttonShowRouteForUser()" id="showRouteUserButton">Show Users Route</button>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
                     <li class="nav-item mr-3">
-                        <button onclick="logInPress()" class="btn btn-outline-light" id="login">Login</button>
+                        <button onclick="logInPress()" class="btn btn-outline-light pulse" id="login">Login</button>
                     </li>
                     <li class="nav-item">
-                        <button onclick="signUpPress()" class="btn btn-light" id="signup">Sign Up</button>
+                        <button onclick="signUpPress()" class="btn btn-info pulse" id="signup">Sign Up</button>
                     </li>
 
                     <li class="nav-item mr-2">
@@ -292,7 +315,7 @@
 
     </div>
 
-    <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <footer id="sticky-footer" class=" footer" >
         <div class="container text-center">
           <small>2020 Copyright &copy; Mikołaj Hościło & Filip Szymczak</small>
           <a href="https://github.com/mhocio/DeliveryApp">github</a>
