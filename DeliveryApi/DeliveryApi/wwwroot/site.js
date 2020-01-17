@@ -314,6 +314,8 @@ function loadMap() {
 
 function ThrowLogo() {
     const element = document.getElementById("FakeLogo");
+    console.log("click logo");
+    element.classList.add("animate");
     element.classList.add("hinge");
 
     element.addEventListener('animationend', function() 

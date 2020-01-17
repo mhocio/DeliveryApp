@@ -2,17 +2,6 @@
 var currentUser = "";
 
 function logInPress() {
-    var id01 = document.getElementById('id01');
-    var id02 = document.getElementById('id02');
-
-    if (id02.style.display == 'inline')
-        id02.style.display = 'none';
-
-    if (id01.style.display == 'inline')
-        id01.style.display = 'none';
-    else
-        id01.style.display = 'inline';
-
     var user_err = document.getElementById('user_err');
     user_err.style.display = 'none';
 
@@ -136,6 +125,7 @@ function logIn() {
         .then(response => response.json())
         .then(() => {
             userDisplay(logUname);
+            closeOverlay();
             document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to get item.', error));
