@@ -7,6 +7,7 @@
   left: 0;
   display: none;
   z-index: 999999999;
+  height: 100vh;
 }
 
 .formLogin {
@@ -22,4 +23,7 @@
 
   .overlay.open {
     max-height: 100%;
+    max-width: 100%;
+    width: auto\9; /* ie8 */
+    max-height: 100vh;
   }
