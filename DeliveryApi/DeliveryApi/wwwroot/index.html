@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="overlay.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- https://github.com/daneden/animate.css -->
+    <link rel="stylesheet" href="animate.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap-4.4.1-dist/css/bootstrap.min.css" rel="stylesheet">     
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -15,8 +23,11 @@
         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
         crossorigin=""></script>
 
+    <script type="text/javascript" src="overlay.js"></script>
     <script type="text/javascript" src="site.js"></script>
+    <script type="text/javascript" src="addMarkers.js"></script>
     <script type="text/javascript" src="usersLogin.js"></script>
+    <script type="text/javascript" src="displayItems.js"></script>
     <script type="text/javascript" src="routeDisplay.js"></script>
     <script type="text/javascript" src="packagesItems.js"></script>
     <script type="text/javascript" src="homeBase.js"></script>
@@ -30,6 +41,29 @@
 
 
     <style>
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+  min-height:100%;
+    position:relative;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  margin-top: 60px;
+  height: 100%;
+}
+
         input[type='submit'],
         button,
         [aria-label] {
@@ -40,34 +74,19 @@
             display: none;
         }
 
-        table {
-            font-family: Arial, sans-serif;
-            border: 1px solid;
-            border-collapse: collapse;
-            background-color: #ffffff;
-            box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-        th {
-            background-color: #95A5A6;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        td {
-            border: 1px solid;
-            padding: 5px;
-        }
-
         #editForm {
             display: none;
         }
 
-        body {
-            margin-top: 10px;
-        }
+        .footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
 
 
         .map {
@@ -83,26 +102,8 @@
         .layout-container {
             display: grid;
             grid-template-columns: 1fr;
-            grid-gap: 5px;
-            margin: 4em;
-            margin-top: 0px;
-        }
-
-        #addForm {
-            display: none;
-        }
-
-        #addBaseForm {
-            display: none;
-        }
-
-        #showRouteButton {
-            background-color: #2A4B7C;
-            color: white;
-        }
-
-        #signup {
-            background-color: azure;
+            margin-right: 7%;
+            margin-left: 7%;
         }
 
         #user_err{
@@ -114,123 +115,220 @@
 
 <body>
 
-    <button onclick="logInPress()" style="width:auto;" id="login">Login</button>
-    <button onclick="signUpPress()" style="width:auto;" id="signup">Sign Up</button>
-    <button onclick="logOutPress()" style="width:auto; display:none;" id="logout">Log Out</button>
-    <label id="user_log" style="display:none">Logged in as: </label>
-    <label id="user" style="display:none">Test</label>
-    <label id="user_err" style="display:none"></label>
-    <br />
 
-    <div id="id01" style="display: none">
-        <form id="logInForm" action="javascript:void(0);" method="get" onsubmit="logIn()">
-            <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" id="uname" required>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-md bg-faded justify-content-center fixed-top">
+            <!--span class="navbar-brand mb-0 h1">delivery packages </span-->
+            <a onclick="ThrowLogo()" id="logothrowA"><img src="img/logo-4.png" alt="Fake Logo" id="FakeLogo" style="height: 40px;"></a>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="psw" required>
-            <button type="submit">Login</button>
-        </form>
-    </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <div id="id02" style="display: none">
-        <form id="signUpForm" action="javascript:void(0);" method="post" onsubmit="signUp()">
-            <label for="uname_s"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" id="uname_s" required>
+            <div class="navbar-collapse collapse w-100" id="collapsingNavbar3">
+                <ul class=" navbar-nav ml-auto w-100 justify-content-end">
+                    <li class="nav-item active mr-2">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-light mr-2 text-nowrap" 
+                        onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-success text-nowrap" 
+                        onclick="buttonShowRouteForUser()" id="showRouteUserButton">Show Users Route</button>
+                    </li>
+                </ul>
 
-            <label for="psw_s"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="psw_s" required>
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
+                <ul class=" navbar-nav ml-auto w-100 justify-content-end">
+                    <li class="nav-item mr-3">
+                        <button onclick="logInPress()" class="btn btn-outline-light pulse btn-sm" id="login">Login</button>
+                    </li>
+                    <li class="nav-item">
+                        <button onclick="signUpPress()" class="btn btn-info pulse btn-sm" id="signup">Sign Up</button>
+                    </li>
 
-    <div id="user_actions" style="display: none">
-        <button onclick="displayMyDeli()" class="action-button">Show My Deliveries</button>
-        <button onclick="SRsave()" class="action-button">Save Route</button>
-        <form action="javascript:void(0);" id="SRform" style="display: none">
-            <label for="SRname" id="SRnameLab">Save as: </label>
-            <input type="text" id="SRname" placeholder="Name" />
-            <input type="submit" id="SRnameButt" value="Save" />
-        </form>
-        <button class="action-button">Update Current Route</button>
-    </div>
+                    <li class="nav-item mr-2">
+                        <span id="user_log" class="navbar-brand ext-white bg-dark" style="display:none">User: </span>
+                        <span id="user" class="navbar-brand text-white bg-dark" style="display:none">Test</span>
+                    </li>
+                    <li class="nav-item">
+                        <button onclick="logOutPress()" class="btn btn-dark border border-info btn-sm" 
+                        style="display:none;" id="logout">Log Out</button>
+                    </li>
+                </ul>
+                
+            </div>
+    </nav>
 
+    <div class="layout-container ">
 
-    <div class="layout-container">
-        <div id="mapid" class="map"></div>
+        <div class="overlay" id="overlay">
+            <div class="card animated fadeIn">
 
-        <button onclick="buttonAddDelivery()" id="addDeliveryButton">Add a new delivery</button>
-        <button onclick="buttonAddBase()" id="addBaseButton">Add Base</button>
-        <button onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
+                <form onsubmit="logIn()" action="javascript:void(0);" method="get" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
+                    <p class="h4 mb-4 text-center">Login</p>
+                
+                    <input id="uname" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
+                    <input id="psw" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Login</button>
+                
+                    <div class="text-center">
+                        <p>Not a member?
+                            <a href="">Register</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        
 
-        <form action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
-            <button type="submit" id="showRouteButton">Show several routes</button>
-            <input type="number" id="number-routes" placeholder="Number of routes" required>
-        </form>
+        
+        <label id="user_err" style="display:none"></label>
+        <br />
 
-        <button onclick="buttonShowRouteForUser()" id="showRouteButton">Show Users Route</button>
-        <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
-        <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
+        <div id="id01" style="display: none">
+        </div>
 
-        <div id="addBaseForm">
-            <h3>Add base</h3>
-            <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
-                <input type="text" id="add-base-lat" placeholder="Latitude" required>
-                <input type="text" id="add-base-long" placeholder="Longitude" required>
-                <input type="submit" value="Add">
-                <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+        <div id="id02" style="display: none">
+            <form id="signUpForm" action="javascript:void(0);" method="post" onsubmit="signUp()">
+                <label for="uname_s"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" id="uname_s" required>
+
+                <label for="psw_s"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" id="psw_s" required>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
 
-        <div id="addForm">
-            <h3>Add a new delivery</h3>
-            <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-                <input type="text" id="add-name" placeholder="Name" required>
-                <input type="text" id="add-lat" placeholder="Latitude" required>
-                <input type="text" id="add-long" placeholder="Longitude" required>
-                <input type="number" id="add-size" placeholder="Size" required>
-                <input type="submit" value="Add">
-                <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+        <div id="user_actions" style="display: none">
+            <button onclick="displayMyDeli()" class="action-button">Show My Deliveries</button>
+            <button onclick="SRsave()" class="action-button">Save Route</button>
+            <form action="javascript:void(0);" id="SRform" style="display: none">
+                <label for="SRname" id="SRnameLab">Save as: </label>
+                <input type="text" id="SRname" placeholder="Name" />
+                <input type="submit" id="SRnameButt" value="Save" />
+            </form>
+            <button class="action-button">Update Current Route</button>
+        </div>
+
+        <div>
+            <form class="form-inline" action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
+                <button class="btn btn-outline-primary mr-3 " type="submit" id="showRouteButton">Show several routes</button>
+                <input class="form-control" type="number" id="number-routes" placeholder="Number of routes" required>
             </form>
         </div>
 
+        <br>
 
-        <div id="editForm">
+        <div id="mapid" class="map"></div>        
+          
+
+        <div class="accordion md-accordion" id="accordionExample">
+
+            <div class="card ">
+              <div class="card-header" id="headingOne">
+                  <button onclick="buttonAddDelivery()" id="addDeliveryButton" class="btn btn-link" 
+                  type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Add new delivery
+                  </button>
+              </div>
+              <div id="collapseOne" class="collapse panel-collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div id="addForm">
+                        <h3>Add a new delivery</h3>
+                        <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+                            <input type="text" id="add-name" placeholder="Name" required>
+                            <input type="text" id="add-lat" placeholder="Latitude" required>
+                            <input type="text" id="add-long" placeholder="Longitude" required>
+                            <input type="number" id="add-size" placeholder="Size" required>
+                            <input id="AddItemInFormButton" type="submit" value="Add">
+                            <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card ">
+              <div class="card-header" id="headingTwo">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" 
+                  aria-expanded="false" aria-controls="collapseTwo"onclick="buttonAddBase()" id="addBaseButton">
+                    Add base
+                  </button>
+              </div>
+              <div id="collapseTwo" class="collapse panel-collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div id="addBaseForm">
+                        <h3>Add base</h3>
+                        <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
+                            <input type="text" id="add-base-lat" placeholder="Latitude" required>
+                            <input type="text" id="add-base-long" placeholder="Longitude" required>
+                            <input type="submit" value="Add">
+                            <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+        <div id="editForm" class="form-inline card card-body">
             <h3>Edit the delivery</h3>
-            <form action="javascript:void(0);" onsubmit="updateItem()">
+            <form action="javascript:void(0);" onsubmit="updateItem()" >
                 <input type="hidden" id="edit-id">
-                <input type="text" id="edit-name" placeholder="Name" required>
-                <input type="text" id="edit-lat" placeholder="Latitude" required>
-                <input type="text" id="edit-long" placeholder="Longitude" required>
-                <input type="number" id="edit-size" placeholder="Size" required>
-                <input type="submit" value="Save">
-                <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
+                <input class="form-control" type="text" id="edit-name" placeholder="Name" required>
+                <input class="form-control" type="text" id="edit-lat" placeholder="Latitude" required>
+                <input class="form-control" type="text" id="edit-long" placeholder="Longitude" required>
+                <input class="form-control" type="number" id="edit-size" placeholder="Size" required>
+                <input class="btn btn-outline-success" type="submit" id="EditItemInFormButton" value="Save">
+                <button type="button" class="close float-rigth" aria-label="Close edit form" onclick="closeAllForms()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </form>
         </div>
 
         <p id="counter"></p>
 
-        <table id="tableDeliveries">
-            <tr>
-                <th>Name</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Size</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Usr</th>
-            </tr>
+        <table id="tableDeliveries" class="table table-hover table-sm table-responsive">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Size</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Usr</th>
+                </tr>
+            </thread>
             <tbody id="deliveries"></tbody>
         </table>
 
+        <button onclick="showAll()" id="showAllButton">Show All Deliveries</button>
+        <button onclick="clearTable()" id="clearTableButton">Clear Table</button>
+
     </div>
+
+    <footer id="sticky-footer" class=" footer" >
+        <div class="container text-center">
+          <small>2020 Copyright &copy; Mikołaj Hościło & Filip Szymczak</small>
+          <a href="https://github.com/mhocio/DeliveryApp">github</a>
+        </div>
+      </footer>
 
     <script type="text/javascript">
         getItems();
         getBase();
     </script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 </body>
 
 </html>
