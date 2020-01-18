@@ -46,7 +46,6 @@ html {
   height: 100%;
   box-sizing: border-box;
   min-height:100%;
-    position:relative;
 }
 
 *,
@@ -61,7 +60,6 @@ body {
   padding-bottom: 6rem;
   min-height: 100%;
   margin-top: 60px;
-  height: 100%;
 }
 
         input[type='submit'],
@@ -116,7 +114,7 @@ body {
 <body>
 
 
-    <nav class="navbar navbar-dark bg-dark navbar-expand-md bg-faded justify-content-center fixed-top">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-md bg-faded fixed-top">
             <!--span class="navbar-brand mb-0 h1">delivery packages </span-->
             <a onclick="ThrowLogo()" id="logothrowA"><img src="img/logo-4.png" alt="Fake Logo" id="FakeLogo" style="height: 40px;"></a>
 
@@ -126,11 +124,8 @@ body {
 
             <div class="navbar-collapse collapse w-100" id="collapsingNavbar3">
                 <ul class=" navbar-nav ml-auto w-100 justify-content-end">
-                    <li class="nav-item active mr-2">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <button type="button" class="btn btn-outline-light mr-2 text-nowrap" 
+                    <li class="nav-item mr-2">
+                        <button type="button" class="btn btn-outline-light text-nowrap border-0" 
                         onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
                     </li>
                     <li class="nav-item">
@@ -141,7 +136,7 @@ body {
 
                 <ul class=" navbar-nav ml-auto w-100 justify-content-end">
                     <li class="nav-item mr-3">
-                        <button onclick="logInPress()" class="btn btn-outline-light pulse btn-sm" id="login">Login</button>
+                        <button onclick="logInPress()" class="btn btn-outline-light pulse btn-sm border-0" id="login">Login</button>
                     </li>
                     <li class="nav-item">
                         <button onclick="signUpPress()" class="btn btn-info pulse btn-sm" id="signup">Sign Up</button>
