@@ -32,14 +32,6 @@ function _displayItems(data) {
         deleteButton.classList.add("btn-sm");
         deleteButton.setAttribute("onclick", `deleteItem(${item.id})`);
 
-        let saveButton = button.cloneNode(false);
-        saveButton.innerText = "Save to Account";
-        saveButton.setAttribute("onclick", `saveItem(${item.id})`);
-
-        let excludeButton = button.cloneNode(false);
-        excludeButton.innerText = "Exclude from Route";
-        excludeButton.setAttribute("onclick", `excludeItem(${item.id})`);
-
         let tr = tBody.insertRow();
 
         let td1 = tr.insertCell(0);
@@ -64,16 +56,6 @@ function _displayItems(data) {
         let td6 = tr.insertCell(5);
         td6.appendChild(deleteButton);
 
-        let td7 = tr.insertCell(6);
-        td7.appendChild(saveButton);
-
-        let td8 = tr.insertCell(7);
-        td8.appendChild(excludeButton);
-
-        let td9 = tr.insertCell(8);
-        let userNode = document.createTextNode(item.username);
-        td9.appendChild(userNode);
-
         var marker = L.marker([item.latitude, item.longitude], {
             title:
                 "name: " +
@@ -91,9 +73,10 @@ function _displayItems(data) {
         });
 
         var div_element = document.createElement("div");
+        div_element.classList.add("text-justify");
 
-        var p_element = document.createElement("p");
-        p_element.innerHTML += item.name;
+        var p_element = document.createElement("div");
+        p_element.innerHTML += "Name: " + item.name;
         var br_element = document.createElement("br");
         p_element.appendChild(br_element);
         p_element.innerHTML +=
@@ -104,11 +87,20 @@ function _displayItems(data) {
 
         let deleteButtonFromPopup = document.createElement("button");
         deleteButtonFromPopup.innerText = "Delete Item";
+        deleteButtonFromPopup.classList.add("btn");
+        deleteButtonFromPopup.classList.add("btn-danger");
+        deleteButtonFromPopup.classList.add("btn-sm");
+        deleteButtonFromPopup.classList.add("m-2");
+        deleteButtonFromPopup.style.padding = "2px";
         deleteButtonFromPopup.setAttribute("onclick", `deleteItem(${item.id})`);
         div_element.appendChild(deleteButtonFromPopup);
 
         let editItemButtonFromPopup = document.createElement("button");
         editItemButtonFromPopup.innerText = "Edit Item";
+        editItemButtonFromPopup.classList.add("btn");
+        editItemButtonFromPopup.classList.add("btn-outline-secondary");
+        editItemButtonFromPopup.classList.add("btn-sm");
+        editItemButtonFromPopup.style.padding = "2px";
         editItemButtonFromPopup.setAttribute("onclick", `displayEditForm(${item.id})`);
         div_element.appendChild(editItemButtonFromPopup);
 

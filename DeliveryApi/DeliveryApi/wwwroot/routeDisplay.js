@@ -70,15 +70,39 @@ function _displayRouteFromPolyline(data) {
     polyline.addTo(mymap).snakeIn();
 }
 
+const controller = new AbortController();
+const signal = controller.signal;
+
+function abortGetSeveralRoutes() {
+    controller.abort();
+
+    const close_loading = document.getElementById("closeGetSeveralRoutesRequest");
+    const loading = document.getElementById("getSeveralRoutesLoading");
+
+    close_loading.style.display = "none";
+    loading.style.display = "none";
+}
+
 function buttonShowSeveralRoutes() {
 
     let numberOfRoutes = document.getElementById("number-routes").value;
 
-    fetch(uriRouteSeveral + numberOfRoutes)
+    const loading = document.getElementById("getSeveralRoutesLoading");
+    const close_loading = document.getElementById("closeGetSeveralRoutesRequest");
+
+    loading.style.display = "inline";
+    close_loading.style.display = "inline";
+
+
+    fetch(uriRouteSeveral + numberOfRoutes, {
+            signal: signal,
+        })
         .then(response => response.json())
         .then(data => {
             console.log(data);
             _displayRoutesFromPolylinesSeveral(data);
+            loading.style.display = "none";
+            close_loading.style.display = "none";
         })
         .catch(error =>
             console.error("Unable to to draw several routes.", error)
