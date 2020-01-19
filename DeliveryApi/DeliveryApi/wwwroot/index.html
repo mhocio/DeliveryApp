@@ -155,46 +155,49 @@ body {
             </div>
     </nav>
 
-    <div class="layout-container ">
 
-        <div class="overlay" id="overlay">
-            <div class="card animated fadeIn">
 
-                <form onsubmit="logIn()" action="javascript:void(0);" method="get" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
-                    <p class="h4 mb-4 text-center">Login</p>
-                
-                    <input id="uname" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
-                    <input id="psw" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
-                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Login</button>
-                
-                    <div class="text-center">
-                        <p>Not a member?
-                            <a href="">Register</a>
-                        </p>
-                    </div>
-                </form>
-            </div>
+    <div class="overlay animated fadeIn" id="overlay-login">
+        <div class="card animated fadeIn">
+
+            <form onsubmit="logIn()" action="javascript:void(0);" method="get" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
+                <p class="h4 mb-4 text-center">Login</p>
+            
+                <input id="uname" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
+                <input id="psw" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+                <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Login</button>
+            
+                <div class="text-center">
+                    <p>Not a member?
+                        <a href="#null" onclick="redirectToRegister(); return false;">Register</a>
+                    </p>
+                </div>
+            </form>
         </div>
-        
-        
+    </div>
 
+
+    <div class="overlay animated fadeIn" id="overlay-register">
+        <div class="card animated fadeIn">
+
+            <form onsubmit="signUp()" id="signUpForm" action="javascript:void(0);" method="post" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
+                <p class="h4 mb-4 text-center">Register</p>
+            
+                <input id="uname_s" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Enter Username">
+                <input id="psw_s" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Enter Password">
+                <input id="psw_s_repeat" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Repeat Password">
+                <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Register</button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="layout-container ">
+   
         
         <label id="user_err" style="display:none"></label>
         <br />
-
-        <div id="id01" style="display: none">
-        </div>
-
-        <div id="id02" style="display: none">
-            <form id="signUpForm" action="javascript:void(0);" method="post" onsubmit="signUp()">
-                <label for="uname_s"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" id="uname_s" required>
-
-                <label for="psw_s"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" id="psw_s" required>
-                <button type="submit">Sign Up</button>
-            </form>
-        </div>
 
         <div id="user_actions" style="display: none">
             <button onclick="displayMyDeli()" class="action-button">Show My Deliveries</button>

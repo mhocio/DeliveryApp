@@ -288,28 +288,6 @@ function loadMap() {
     markersBaseLayer = L.layerGroup().addTo(mymap);
 
     L.control.scale().addTo(mymap);
-
-    currentUser = '';
-
-    document.addEventListener('keyup', function (event) {
-        if (event.defaultPrevented) {
-            return;
-        }
-    
-        var key = event.key || event.keyCode;
-        if (key === 'Escape' || key === 'Esc' || key === 27) {
-            console.log("click ESC");
-            closeOverlay();
-        }
-    });
-
-    overlay = document.getElementById('overlay');
-    overlay.addEventListener('click', function (event) {
-
-        if (event.target.querySelector('.overlay-inner') != null) {
-            closeOverlay();
-        }
-    });
 }
 
 function ThrowLogo() {
@@ -324,4 +302,53 @@ function ThrowLogo() {
     })
 }
 
-document.addEventListener("DOMContentLoaded", loadMap, false);
+function loadPage() {
+    loadMap();
+
+    currentUser = '';
+
+    document.addEventListener('keyup', function (event) {
+        if (event.defaultPrevented) {
+            return;
+        }
+    
+        var key = event.key || event.keyCode;
+        if (key === 'Escape' || key === 'Esc' || key === 27) {
+            console.log("click ESC");
+            closeOverlay_login();
+            closeOverlay_register();
+        }
+    });
+
+    function validatePassword() {
+        if(password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords Don't Match");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+
+    var password = document.getElementById("psw_s")
+    var confirm_password = document.getElementById("psw_s_repeat");
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+
+    var overlay_login = document.getElementById('overlay-login');
+    overlay_login.addEventListener('click', function (event) {
+
+        if (event.target.querySelector('.overlay-inner') != null) {
+            closeOverlay_login();
+        }
+    });
+
+    var overlay_register = document.getElementById('overlay-register');
+    overlay_register.addEventListener('click', function (event) {
+
+        if (event.target.querySelector('.overlay-inner') != null) {
+            closeOverlay_register();
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", loadPage, false);
