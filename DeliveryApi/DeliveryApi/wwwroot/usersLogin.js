@@ -2,19 +2,12 @@
 var currentUser = "";
 
 function logInPress() {
-    var user_err = document.getElementById('user_err');
-    user_err.style.display = 'none';
-
-
     var overlay = document.getElementById('overlay-login');
     overlay.classList.remove('fadeOut');
     overlay.classList.add('open');
 }
 
 function signUpPress() {
-    var user_err = document.getElementById('user_err');
-    user_err.style.display = 'none';
-
     var overlay = document.getElementById('overlay-register');
     overlay.classList.add('open');
 }
@@ -40,8 +33,6 @@ function logOutPress() {
     user.style.display = 'none';
     user.innerText = '';
     currentUser = '';
-    var user_actions = document.getElementById('user_actions');
-    user_actions.style.display = 'none';
 
     getItems();
     getBase();
@@ -53,6 +44,7 @@ function userDisplay(addUname) {
     var user_log = document.getElementById('user_log');
     user_log.style.display = 'inline';
     currentUser = addUname.value.trim();
+
     var user = document.getElementById('user');
     user.style.display = 'inline';
     user.textContent = currentUser;
@@ -61,26 +53,44 @@ function userDisplay(addUname) {
     login.style.display = 'none';
     var signup = document.getElementById('signup');
     signup.style.display = 'none';
+
+
     var logout = document.getElementById('logout');
     logout.style.display = 'inline';
-    var user_actions = document.getElementById('user_actions');
-    user_actions.style.display = 'block';
 
     getItems();
     getBase();
 }
 
 function handleUserErrors(response) {
-    var user_err = document.getElementById('user_err');
     if (!response.ok) {
         if (response.status == 404) {
-            user_err.style.display = 'inline';
-            user_err.textContent = "Wrong username or password!";
-            throw Error(response.statusText);
+
+            const myNotification = window.createNotification({
+                theme: "error",
+                closeOnClick: true,
+			    displayCloseButton: true,
+            });
+            myNotification({
+                message: "Wrong username or password!",
+                title: "Login error"
+            });  
+
+            throw Error(response.statusText); 
+
         }
         if (response.status = 400) {
-            user_err.style.display = 'inline';
-            user_err.textContent = "Username taken!";
+
+            const myNotification = window.createNotification({
+                theme: "error",
+                closeOnClick: true,
+			    displayCloseButton: true,
+            });
+            myNotification({
+                message: "Username taken!",
+                title: "Register error"
+            }); 
+
             throw Error(response.statusText);
         }
     }
@@ -130,10 +140,4 @@ function logIn() {
             document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to get item.', error));
-}
-
-function displayMyDeli() {
-    const items = deliveries.filter(item => item.username === currentUser);
-    clearTable();
-    justDisplayItems(items);
 }
