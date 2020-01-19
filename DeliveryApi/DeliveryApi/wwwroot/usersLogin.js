@@ -5,25 +5,27 @@ function logInPress() {
     var user_err = document.getElementById('user_err');
     user_err.style.display = 'none';
 
-    overlay = document.getElementById('overlay');
+
+    var overlay = document.getElementById('overlay-login');
+    overlay.classList.remove('fadeOut');
     overlay.classList.add('open');
 }
 
 function signUpPress() {
-    var id01 = document.getElementById('id01');
-    var id02 = document.getElementById('id02');
-
-    if (id01.style.display == 'inline')
-        id01.style.display = 'none';
-
-    if (id02.style.display == 'inline')
-        id02.style.display = 'none';
-    else
-        id02.style.display = 'inline';
-
     var user_err = document.getElementById('user_err');
     user_err.style.display = 'none';
+
+    var overlay = document.getElementById('overlay-register');
+    overlay.classList.add('open');
 }
+
+function redirectToRegister() {
+    var old_overlay = document.getElementById('overlay-login');
+    old_overlay.classList.remove('open');
+
+    signUpPress();
+}
+
 
 function logOutPress() {
     var login = document.getElementById('login');
@@ -54,10 +56,7 @@ function userDisplay(addUname) {
     var user = document.getElementById('user');
     user.style.display = 'inline';
     user.textContent = currentUser;
-    var id01 = document.getElementById('id01');
-    id01.style.display = 'none';
-    var id02 = document.getElementById('id02');
-    id02.style.display = 'none';
+
     var login = document.getElementById('login');
     login.style.display = 'none';
     var signup = document.getElementById('signup');
@@ -110,6 +109,8 @@ function signUp() {
         .then(response => response.json())
         .then(() => {
             userDisplay(addUname);
+            closeOverlay_register();
+            document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to add item.', error));
 }
@@ -125,7 +126,7 @@ function logIn() {
         .then(response => response.json())
         .then(() => {
             userDisplay(logUname);
-            closeOverlay();
+            closeOverlay_login();
             document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to get item.', error));
