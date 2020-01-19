@@ -349,6 +349,8 @@ function loadPage() {
             closeOverlay_register();
         }
     });
+
+      $('[data-toggle="tooltip"]').tooltip();
 }
 
 document.addEventListener("DOMContentLoaded", loadPage, false);
