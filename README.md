@@ -6,7 +6,7 @@ A full stack application providing nice interface for displaying the shortest ro
 In order to run the routing image with publishing a container’s port (5000) to the host:
 - run the following command in the folder [routing](routing/) :
 - ```docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/mazowieckie-latest.osrm```
-- Run the ```DeliveryApi.sln``` [DeliveryApi.sln](DeliveryApi/DeliveryApi/DeliveryApi.sln) and start the project
+- Run the [DeliveryApi.sln](DeliveryApi/DeliveryApi/DeliveryApi.sln) and start the project
 
 ### Information about OSRM and how to initialize the docker image for running the routing service:
 - http://project-osrm.org/docs/v5.22.0/api/#general-options
