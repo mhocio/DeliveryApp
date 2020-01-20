@@ -402,7 +402,7 @@ namespace DeliveryApi.Controllers
                 return item;
             }
 
-            var user = HttpContext.Session.GetString(SessionUser);
+            //var user = HttpContext.Session.GetString(SessionUser);
             //System.Diagnostics.Debug.Write("SESSION: " + SessionUser);
 
             return NotFound();

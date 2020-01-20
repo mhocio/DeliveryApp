@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryApi.Models;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace DeliveryApi.Controllers
 {
@@ -41,9 +43,27 @@ namespace DeliveryApi.Controllers
             return userItem;
         }
 
+        [HttpGet("bySecure/{secure}")]
+        public async Task<ActionResult<UserItem>> GetUserItem(string secure)
+        {
+            var userItem = await _context.UserItems.Where(x => x.SecureString == secure).FirstAsync();
+
+            if (userItem == null)
+            {
+                return NotFound();
+            }
+
+            return userItem;
+        }
+
         [HttpGet("byUser/{user}/{pw}")]
         public async Task<ActionResult<UserItem>> GetUserItem(string user, string pw)
         {
+            var checkUser = await _context.UserItems.Where(x => x.Username == user).AnyAsync();
+
+            if (checkUser == false)
+                return NotFound();
+
             var userItem = await _context.UserItems.Where(x => x.Username == user).FirstAsync();
 
             if (pw != userItem.Password)
@@ -51,9 +71,7 @@ namespace DeliveryApi.Controllers
                 //return BadRequest();
 
             if (userItem == null)
-            {
                 return NotFound();
-            }
 
             return userItem;
         }
@@ -102,6 +120,19 @@ namespace DeliveryApi.Controllers
 
             if (checkUser == true)
                 return BadRequest();
+
+            /*Won't work
+            RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+            byte[] buffer = new byte[8];
+            rngCsp.GetBytes(buffer);
+            rngCsp.Dispose();
+            string converted = Encoding.Unicode.GetString(buffer, 0, buffer.Length);
+            userItem.SecureString = converted;*/
+
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string converted = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+            userItem.SecureString = converted;
 
             _context.UserItems.Add(userItem);
 

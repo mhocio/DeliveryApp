@@ -19,6 +19,49 @@ function redirectToRegister() {
     signUpPress();
 }
 
+function setCookie(cname, cvalue) {
+    document.cookie = cname + "=" + cvalue + ";";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function handleReloadErrors(response) {
+    if (!response.ok)
+        throw Error(response.statusText);
+    return response;
+}
+
+function reloadUser() {
+    var user = getCookie("user");
+    //console.log(user);
+
+    if (user != '') {
+        var urilog = uriUser + "/bySecure/" + user;
+
+        fetch(urilog)
+            .then(handleReloadErrors)
+            .then(response => response.json())
+            .then((data) => {
+                userDisplay(data.username);
+            })
+            .catch(error => console.error('Unable to get item.', error));
+    }
+}
+
 
 function logOutPress() {
     var login = document.getElementById('login');
@@ -37,13 +80,15 @@ function logOutPress() {
     getItems();
     getBase();
 
+    setCookie("user", currentUser);
+
     document.getElementById("showRouteUserButton").classList.remove("pulse");
 }
 
-function userDisplay(addUname) {
+function userDisplay(Uname) {
     var user_log = document.getElementById('user_log');
     user_log.style.display = 'inline';
-    currentUser = addUname.value.trim();
+    currentUser = Uname;
 
     var user = document.getElementById('user');
     user.style.display = 'inline';
@@ -117,9 +162,13 @@ function signUp() {
     })
         .then(handleUserErrors)
         .then(response => response.json())
-        .then(() => {
-            userDisplay(addUname);
+        .then((data) => {
+            userDisplay(addUname.value.trim());
             closeOverlay_register();
+
+            console.log(data);
+            setCookie("user", data.secureString);
+
             document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to add item.', error));
@@ -134,10 +183,15 @@ function logIn() {
     fetch(urilog)
         .then(handleUserErrors)
         .then(response => response.json())
-        .then(() => {
-            userDisplay(logUname);
+        .then((data) => {
+            userDisplay(logUname.value.trim());
             closeOverlay_login();
+
+            setCookie("user", data.secureString);
+
             document.getElementById("showRouteUserButton").classList.add("pulse");
         })
         .catch(error => console.error('Unable to get item.', error));
 }
+
+document.addEventListener("DOMContentLoaded", reloadUser, false);
