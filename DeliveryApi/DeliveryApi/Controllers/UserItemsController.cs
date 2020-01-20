@@ -131,7 +131,7 @@ namespace DeliveryApi.Controllers
 
             Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string converted = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+            string converted = new string(Enumerable.Repeat(chars, 64).Select(s => s[random.Next(s.Length)]).ToArray());
             userItem.SecureString = converted;
 
             _context.UserItems.Add(userItem);
