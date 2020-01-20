@@ -70,8 +70,8 @@ function _displayRouteFromPolyline(data) {
     polyline.addTo(mymap).snakeIn();
 }
 
-const controller = new AbortController();
-const signal = controller.signal;
+var controller = new AbortController();
+var signal = controller.signal;
 
 function abortGetSeveralRoutes() {
     controller.abort();
@@ -81,6 +81,9 @@ function abortGetSeveralRoutes() {
 
     close_loading.style.display = "none";
     loading.style.display = "none";
+
+    controller = new AbortController();
+    signal = controller.signal;
 }
 
 function buttonShowSeveralRoutes() {

@@ -55,6 +55,7 @@ html {
   height: 100%;
   box-sizing: border-box;
   min-height:100%;
+  font-size:calc(60% + 0.3vw);
 }
 
 *,
@@ -125,6 +126,8 @@ body {
         }
 
         @media screen and (max-width: 756px) {
+
+
             .layout-container {
                 margin-right: 0%;
                 margin-left: 0%;
@@ -190,8 +193,8 @@ body {
             <form onsubmit="logIn()" action="javascript:void(0);" method="get" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
                 <p class="h4 mb-4 text-center">Login</p>
             
-                <input id="uname" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
-                <input id="psw" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+                <input id="uname" type="text" class="form-control mb-4" placeholder="Username">
+                <input id="psw" type="password" class="form-control mb-4" placeholder="Password">
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Login</button>
             
                 <div class="text-center">
@@ -210,9 +213,9 @@ body {
             <form onsubmit="signUp()" id="signUpForm" action="javascript:void(0);" method="post" class="border border-light p-5 formLogin overlay-inner" style="color: #757575;">
                 <p class="h4 mb-4 text-center">Register</p>
             
-                <input id="uname_s" type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Enter Username">
-                <input id="psw_s" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Enter Password">
-                <input id="psw_s_repeat" type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Repeat Password">
+                <input id="uname_s" type="text" class="form-control mb-4" placeholder="Enter Username">
+                <input id="psw_s" type="password" class="form-control mb-4" placeholder="Enter Password">
+                <input id="psw_s_repeat" type="password" class="form-control mb-4" placeholder="Repeat Password">
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Register</button>
 
                 <label id="user_err" style="display:none"></label>
@@ -293,7 +296,7 @@ body {
                         <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
                             <input class="form-control" type="text" id="add-base-lat" placeholder="Latitude" required>
                             <input class="form-control" type="text" id="add-base-long" placeholder="Longitude" required>
-                            <input class="btn btn-outline-success mr-2" type="submit" value="Add" class="mr-2">
+                            <input class="btn btn-outline-success mr-2" type="submit" value="Add">
                             <button type="button" class="close float-rigth" aria-label="Close Add base form" onclick="closeAllForms()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -333,7 +336,7 @@ body {
                     <th></th>
                     <th></th>
                 </tr>
-            </thread>
+            </thead>
             <tbody id="deliveries"></tbody>
         </table>
 
