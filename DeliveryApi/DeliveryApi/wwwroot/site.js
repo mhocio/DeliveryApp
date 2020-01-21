@@ -112,9 +112,9 @@ function closeAllForms() {
 }
 
 function _displayCount(itemCount) {
-    const name = itemCount === 1 ? "delivery" : "deliveries";
-
-    document.getElementById("counter").innerText = `${itemCount} ${name}`;
+    //const name = itemCount === 1 ? "delivery" : "deliveries";
+    //document.getElementById("counter").innerText = `${itemCount} ${name}`;
+    document.getElementById("counter").innerText = itemCount;
 }
 
 function clearTable() {
@@ -197,6 +197,8 @@ function ThrowLogo() {
 
 function loadPage() {
     loadMap();
+    getBase();
+    getItems();
 
     currentUser = '';
 
