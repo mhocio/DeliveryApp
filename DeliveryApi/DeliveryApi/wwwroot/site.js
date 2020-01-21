@@ -50,34 +50,50 @@ function buttonAddBase() {
 }
 
 function displayEditForm(id) {
-    closeAllForms();
-    editMode = true;
+    var itemO = deliveries.find(item => item.id === id);
+    if (itemO.username == currentUser) {
 
-    var item = deliveries.find(item => item.id === id);
+        closeAllForms();
+        editMode = true;
 
-    var points = markersLayer._layers;
-    var pointItemMarker;
-    Object.keys(points).forEach(function(key) {
-        console.log(points[key]);
-        if (points[key].options.id === id)
-            pointItemMarker = points[key];
-     });
+        var item = deliveries.find(item => item.id === id);
 
-    removedMarker = pointItemMarker;
-    markersLayer.removeLayer(pointItemMarker);
+        var points = markersLayer._layers;
+        var pointItemMarker;
+        Object.keys(points).forEach(function (key) {
+            console.log(points[key]);
+            if (points[key].options.id === id)
+                pointItemMarker = points[key];
+        });
+
+        removedMarker = pointItemMarker;
+        markersLayer.removeLayer(pointItemMarker);
 
 
-    document.getElementById("edit-name").value = item.name;
-    document.getElementById("edit-lat").value = parseFloat(item.latitude).toFixed(6);
-    document.getElementById("edit-long").value = parseFloat(item.longitude).toFixed(6);
-    document.getElementById("edit-size").value = item.size;
-    document.getElementById("edit-id").value = item.id;
-    document.getElementById("editForm").style.display = "block";
+        document.getElementById("edit-name").value = item.name;
+        document.getElementById("edit-lat").value = parseFloat(item.latitude).toFixed(6);
+        document.getElementById("edit-long").value = parseFloat(item.longitude).toFixed(6);
+        document.getElementById("edit-size").value = item.size;
+        document.getElementById("edit-id").value = item.id;
+        document.getElementById("editForm").style.display = "block";
 
-    if (marker) {
-        mymap.removeLayer(marker);
+        if (marker) {
+            mymap.removeLayer(marker);
+        }
+        addNewItemMarker(item.latitude, item.longitude);
+
     }
-    addNewItemMarker(item.latitude, item.longitude);
+    else {
+        const myNotification = window.createNotification({
+            theme: "error",
+            closeOnClick: true,
+            displayCloseButton: true,
+        });
+        myNotification({
+            message: "Not authorized to edit!",
+            title: "Edit error"
+        });
+    }
 }
 
 function closeEditForm() {
