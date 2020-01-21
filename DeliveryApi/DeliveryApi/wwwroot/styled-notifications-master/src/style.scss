@@ -6,29 +6,27 @@ $error: #BD362F;
 $grey: #999999;
 
 .ncf-container {
-  font-size: 14px;
-  box-sizing: border-box;
   position: fixed;
   z-index: 999999;
 
   &.nfc-top-left {
-    top: 12px;
-    left: 12px;
+    top: 1200px;
+    left: 1200px;
   }
 
   &.nfc-top-right {
-    top: 12px;
-    right: 12px;
+    top: 1200px;
+    right: 1200px;
   }
 
   &.nfc-bottom-right {
-    bottom: 12px;
-    right: 12px;
+    bottom: 1200px;
+    right: 1200px;
   }
 
   &.nfc-bottom-left {
-    bottom: 12px;
-    left: 12px;
+    bottom: 1200px;
+    left: 1200px;
   }
 
   @media (max-width: 767px) {

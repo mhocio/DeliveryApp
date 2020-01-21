@@ -49,6 +49,10 @@ function buttonShowRouteForUser() {
 function clearRoute() {
     if (polyline)
         mymap.removeLayer(polyline);
+
+    var alert = document.getElementById("routeDisplayedAlert");
+    alert.innerHTML = "";
+    alert.style.display = "none";
   
     clearRouteSeveral();
 }
@@ -57,7 +61,21 @@ function _displayRouteFromPolyline(data) {
     clearRoute();
 
     var encoded = data.trips[0].geometry;
-    //console.log(encoded);
+    
+    var distance = data.trips[0].distance;
+    var distanceMessage = "";
+    if (distance > 1000) {
+        distanceMessage = "Distance: " + (distance / 1000).toFixed(2) + " km"
+    } else {
+        distanceMessage = "Distance: " + distance + " meters"
+    }
+    
+    var duration = data.trips[0].duration;
+    var minutes = Math.round(duration / 60);
+
+    //var minutes = Math.floor(duration / 60);
+    //var seconds = duration - minutes * 60;
+
     polyline = L.Polyline.fromEncoded(encoded, {
         color: "#2A4B7C",
         clickable: "true",
@@ -68,6 +86,20 @@ function _displayRouteFromPolyline(data) {
 
     mymap.fitBounds(polyline.getBounds());
     polyline.addTo(mymap).snakeIn();
+
+    const myNotification = window.createNotification({
+        theme: "info",
+        closeOnClick: true,
+        displayCloseButton: true,
+    });
+    myNotification({
+        message: distanceMessage + "\n" + "Duration: " + minutes + " minutes",
+        title: "Route displayed!"
+    });
+
+    var alert = document.getElementById("routeDisplayedAlert");
+    alert.innerHTML = "<h3>" + "Route displayed" + "</h3>" + distanceMessage + ", Duration: " + minutes + " minutes"
+    alert.style.display = "inline";
 }
 
 var controller = new AbortController();

@@ -69,7 +69,7 @@ body {
   margin: 0;
   padding-bottom: 6rem;
   min-height: 100%;
-  margin-top: 60px;
+  margin-top: 50px;
 }
 
         input[type='submit'],
@@ -230,7 +230,7 @@ body {
 
         <br>
 
-        <div>
+        <div >
             <form class="form-row align-items-center" action="javascript:void(0);" id="DisplayRoutesNForm" onsubmit="buttonShowSeveralRoutes()">
                 <div class="col-auto my-1">
                     <button class="btn btn-outline-primary" type="submit" id="showRouteButton" data-toggle="tooltip" 
@@ -251,7 +251,8 @@ body {
 
         <br>
 
-
+          <div class="alert alert-secondary fade show" role="alert" id="routeDisplayedAlert" style="display: none;">
+          </div>
 
         <div id="mapid" class="map"></div>        
           
