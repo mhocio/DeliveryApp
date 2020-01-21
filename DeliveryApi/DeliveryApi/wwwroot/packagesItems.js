@@ -60,25 +60,41 @@ function addItem() {
 }
 
 function deleteItem(id) {
-    fetch(uri + "/" + id)
-        .then(response => response.json())
-        .then(data => {
-            fetch(`${uri}/${id}`, {
-                method: "DELETE"
-            })
-                .then(() => {
-                    getItems();
-        
-                    const myNotification = window.createNotification({
-                    });
-                    myNotification({
-                        message: data.name + " deleted!",
-                        displayCloseButton: true,
-                    });
+    var itemO = deliveries.find(item => item.id === id);
+    if (itemO.username == currentUser) {
+
+        fetch(uri + "/" + id)
+            .then(response => response.json())
+            .then(data => {
+                fetch(`${uri}/${id}`, {
+                    method: "DELETE"
                 })
-                .catch(error => console.error("Unable to delete item.", error));
-        })
-        .catch(error => console.error("Unable to get item.", error));
+                    .then(() => {
+                        getItems();
+
+                        const myNotification = window.createNotification({
+                        });
+                        myNotification({
+                            message: data.name + " deleted!",
+                            displayCloseButton: true,
+                        });
+                    })
+                    .catch(error => console.error("Unable to delete item.", error));
+            })
+            .catch(error => console.error("Unable to get item.", error));
+
+    }
+    else {
+        const myNotification = window.createNotification({
+            theme: "error",
+            closeOnClick: true,
+            displayCloseButton: true,
+        });
+        myNotification({
+            message: "Not authorized to delete!",
+            title: "Delete error"
+        }); 
+    }
 }
 
 function updateItem() {
