@@ -1,6 +1,6 @@
 # DeliveryApp
 A full stack application providing nice interface for displaying the shortest route for multiple items delivery problem.
-#### [Link to the project documentation](https://docs.google.com/document/d/e/2PACX-1vTrCGk_fOMwPwbJku5kaQr9lPzl_AXCgDlSNu_i8MKBsEo9IsVlxPAoO3Pv76ahrg/pub)
+#### [Link to the project documentation](https://docs.google.com/document/d/1drHtQHOnIHabywGUjHAPBm6SAeDFVtBD/edit?fbclid=IwAR1BUkP8TeHHd-gaFw8grjQu_A49lQYMLuI-QvQgt5CaFrvvJ-TCfS9HSFM&pli=1#)
 
 
 ## How to run the project
