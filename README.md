@@ -22,3 +22,4 @@ In case you want to increase the limit of points of the trip, add the following 
 - [ ] Secure all endpoints
 - [ ] Implement heuristic approach to the VRP, ex.: https://developers.google.com/optimization/routing/vrp
 - [x] Implement more display information of the route to the user
+- [ ] Implement some of the https://leafletjs.com/plugins.html
