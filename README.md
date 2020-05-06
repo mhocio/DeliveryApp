@@ -1,5 +1,10 @@
 # DeliveryApp
-A full stack application written in ASP.NET Core, providing nice web interface for displaying the shortest route for multiple items delivery problem.
+A Full Stack application providing a nice interface web page with the possibility of creation several users.
+ <br>Used for both adding sevral deliveries to the interactive map and displaying the shortest route for multiple items delivery problem. <br>Page remembers the user with the usage of cookies. Users may log back to the page and see their deliveries. All data is stored on the server.
+
+ Vehicle Routing Problem *VRP* is an algorithmic problem, whose main idea is to find the best possible route through multiple points. Unlike in graph theory, points on a map cannot usually be connected by just a straight line, the path from point A to point B may be very convoluted.
+
+
 #### [Link to the project documentation](https://docs.google.com/document/d/1drHtQHOnIHabywGUjHAPBm6SAeDFVtBD/edit?fbclid=IwAR1BUkP8TeHHd-gaFw8grjQu_A49lQYMLuI-QvQgt5CaFrvvJ-TCfS9HSFM&pli=1#)
 
 
