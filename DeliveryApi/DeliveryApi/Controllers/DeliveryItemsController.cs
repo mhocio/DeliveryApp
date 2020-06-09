@@ -18,6 +18,7 @@ namespace DeliveryApi.Controllers
     [ApiController]
     public class DeliveryItemsController : ControllerBase
     {
+        private string routingAddr = "http://127.0.0.1:5000";
         private readonly DeliveryContext _context;
 
         public DeliveryItemsController(DeliveryContext context)
@@ -97,7 +98,7 @@ namespace DeliveryApi.Controllers
             }
 
             string pointsString = CreatePointsString_toUrl(pointItems);
-            string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+            string reqUrl = routingAddr + "/trip/v1/driving/" + pointsString + "?steps=true";
 
             var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
             httpWebRequestQR.ContentType = "application/json";
@@ -144,7 +145,7 @@ namespace DeliveryApi.Controllers
             }
 
             string pointsString = CreatePointsString_toUrl(pointItems);
-            string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+            string reqUrl = routingAddr + "/trip/v1/driving/" + pointsString + "?steps=true";
 
             var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
             httpWebRequestQR.ContentType = "application/json";
@@ -259,7 +260,7 @@ namespace DeliveryApi.Controllers
                         requestItems.Add(pointItems[index[elem_i]]);
 
                     string pointsString = CreatePointsString_toUrl(requestItems);
-                    string reqUrl = "http://127.0.0.1:5000/trip/v1/driving/" + pointsString + "?steps=true";
+                    string reqUrl = routingAddr + "/trip/v1/driving/" + pointsString + "?steps=true";
                     var httpWebRequestQR = (HttpWebRequest)WebRequest.Create(reqUrl);
                     httpWebRequestQR.ContentType = "application/json";
                     httpWebRequestQR.Method = "GET";
@@ -300,6 +301,9 @@ namespace DeliveryApi.Controllers
         [HttpGet("Route/Several/{K}")]
         public ActionResult<IEnumerable<string>> GetN_RoutesPolylines(int K)
         {
+            if (_context.DeliveryItems.Count() > 5)
+                return BadRequest();
+
             List<PointItem> pointItems = new List<PointItem>();
             List<PointItem> pointbases = new List<PointItem>();
 
@@ -324,6 +328,14 @@ namespace DeliveryApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDeliveryItem(long id, DeliveryItem deliveryItem)
         {
+            double doubleval1, doubleval2;
+            if (!double.TryParse(deliveryItem.Latitude, out doubleval1) 
+            || !double.TryParse(deliveryItem.Longitude, out doubleval2))
+                return BadRequest();
+
+            if (double.IsNaN(doubleval1) || double.IsNaN(doubleval2))
+                return BadRequest();
+
             if (id != deliveryItem.Id)
             {
                 return BadRequest();
@@ -356,6 +368,16 @@ namespace DeliveryApi.Controllers
         [HttpPost]
         public async Task<ActionResult<DeliveryItem>> PostDeliveryItem(DeliveryItem deliveryItem)
         {
+            double doubleval1, doubleval2;
+            if (!double.TryParse(deliveryItem.Latitude, out doubleval1) 
+            || !double.TryParse(deliveryItem.Longitude, out doubleval2))
+                return BadRequest();
+
+            if (double.IsNaN(doubleval1) || double.IsNaN(doubleval2))
+                return BadRequest();
+
+            System.Console.WriteLine(doubleval1);
+
             _context.DeliveryItems.Add(deliveryItem);
             await _context.SaveChangesAsync();
 
@@ -433,6 +455,14 @@ namespace DeliveryApi.Controllers
         [HttpPost("Base")]
         public async Task<ActionResult<BaseDeliveryItem>> PostBase(BaseDeliveryItem baseItem)
         {
+            double doubleval1, doubleval2;
+            if (!double.TryParse(baseItem.Latitude, out doubleval1) 
+            || !double.TryParse(baseItem.Longitude, out doubleval2))
+                return BadRequest();
+
+            if (double.IsNaN(doubleval1) || double.IsNaN(doubleval2))
+                return BadRequest();
+
             foreach (var id in _context.BaseItems.Select(elem => elem.Id))
             {
                 var entity = new BaseDeliveryItem { Id = id };
@@ -451,6 +481,14 @@ namespace DeliveryApi.Controllers
         [HttpPost("Base/{User}")]
         public async Task<ActionResult<BaseDeliveryItem>> PostBaseForUser(string User, BaseDeliveryItem baseItem)
         {
+            double doubleval1, doubleval2;
+            if (!double.TryParse(baseItem.Latitude, out doubleval1) 
+            || !double.TryParse(baseItem.Longitude, out doubleval2))
+                return BadRequest();
+
+            if (double.IsNaN(doubleval1) || double.IsNaN(doubleval2))
+                return BadRequest();
+
             var item = _context.BaseItems.FirstOrDefault(elem => elem.Username == User);
 
             if (item != null)
