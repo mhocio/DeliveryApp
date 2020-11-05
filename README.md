@@ -23,7 +23,7 @@ In order to run the project you need to have:
 - Run the Docker routing image and map the port 5000 of your host to port 5000 of the Docker in the folder [routing](routing/):
     ```sh
   $ cd routing
-  $ docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/mazowieckie-latest.osrm
+  $ docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend:v5.22.0 osrm-routed --algorithm mld /data/mazowieckie-latest.osrm
   ```
 - Start the local server by running the applicaion on any port (in the example used 5055 port - do not use port 5000 since it is required for the Docker image):
     ```sh
@@ -36,7 +36,7 @@ In order to run the project you need to have:
 - Run the Docker routing image and map the port 5000 of your host to port 5000 of the Docker in the folder [routing](routing/):
     ```sh
   $ cd routing
-  $ docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/mazowieckie-latest.osrm
+  $ docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend:v5.22.0 osrm-routed --algorithm mld /data/mazowieckie-latest.osrm
   ```
 - Start the [DeliveryApi.csproj.user](DeliveryApi/DeliveryApi/DeliveryApi.csproj.user) and start the application
 - Open the application on `localhost` in your browser.
