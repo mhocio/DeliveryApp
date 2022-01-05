@@ -23,6 +23,9 @@
         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
         crossorigin=""></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js" integrity="sha256-fOPHmaamqkHPv4QYGxkiSKm7O/3GAJ4554pQXYleoLo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY=" crossorigin="anonymous" />
+
     <script type="text/javascript" src="overlay.js"></script>
     <script type="text/javascript" src="site.js"></script>
     <script type="text/javascript" src="addMarkers.js"></script>
@@ -30,6 +33,7 @@
     <script type="text/javascript" src="displayItems.js"></script>
     <script type="text/javascript" src="routeDisplay.js"></script>
     <script type="text/javascript" src="packagesItems.js"></script>
+    <script type="text/javascript" src="intro_tour.js"></script>
     <script type="text/javascript" src="homeBase.js"></script>
 
     <script type="text/javascript" src="leaflet-color-markers.js"></script>
@@ -126,8 +130,6 @@ body {
         }
 
         @media screen and (max-width: 768px) {
-
-
             .layout-container {
                 margin-right: 0%;
                 margin-left: 0%;
@@ -135,6 +137,18 @@ body {
 
             .navbar {
                 padding-left: 0%;
+            }
+
+            .navbar button {
+                font-size: 13px;
+                margin-bottom: 5px;
+                outline: none;
+                border: none;
+            }
+
+            .nav-item button {
+                width: 100vw;
+                margin: auto;
             }
         }
     </style>
@@ -153,28 +167,28 @@ body {
                 <span class="badge badge-info"><div id="counter"></div></span>
             </a>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
+            <button id="navbar-toggler-button" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
 
-            <div class="navbar-collapse collapse " id="collapsingNavbar3">
+            <div class="navbar-collapse collapse float-right text-right" id="collapsingNavbar3">
                 <ul class=" navbar-nav ml-auto  justify-content-end">
                     <li class="nav-item mr-2">
                         <button type="button" class="btn btn-outline-light text-nowrap" 
                         onclick="buttonShowRoute()" id="showRouteButton">Show Route</button>
                     </li>
-                    <li class="nav-item">
-                        <button type="button" class="btn btn-success text-nowrap" 
+                    <li class="nav-item mr-2">
+                        <button type="button" class="btn btn-success text-nowrap" style="display:none" 
                         onclick="buttonShowRouteForUser()" id="showRouteUserButton">Show Users Route</button>
                     </li>
                 </ul>
 
                 <ul class=" navbar-nav ml-auto w-100 justify-content-end">
-                    <li class="nav-item mr-3">
+                    <li class="nav-item mr-2">
                         <button onclick="logInPress()" class="btn btn-outline-light pulse btn-sm border-0" id="login">Login</button>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mr-2">
                         <button onclick="signUpPress()" class="btn btn-info pulse btn-sm" id="signup">Sign Up</button>
                     </li>
 
@@ -182,7 +196,7 @@ body {
                         <span id="user_log" class="navbar-brand ext-white bg-dark" style="display:none"></span>
                         <span id="user" class="navbar-brand text-white bg-dark" style="display:none">Test</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mr-2">
                         <button onclick="logOutPress()" class="btn btn-dark border border-info btn-sm" 
                         style="display:none;" id="logout">Log Out</button>
                     </li>
@@ -265,9 +279,9 @@ body {
 
         <div class="accordion bs-accordion" id="accordionAddItem-Base">
 
-            <div class="card ">
+            <div class="card" id="step_deliveries">
               <div class="card-header " id="headingOne">
-                  <button onclick="buttonAddDelivery()" id="addDeliveryButton" class="btn btn-link" 
+                  <button onclick="buttonAddDelivery()" id="addDeliveryButton" class="btn btn-link"
                   type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     Add new delivery
                   </button>
@@ -280,7 +294,7 @@ body {
                             <input class="form-control" type="text" id="add-name" placeholder="Name" required>
                             <input class="form-control" type="text" id="add-lat" placeholder="Latitude" required>
                             <input class="form-control" type="text" id="add-long" placeholder="Longitude" required>
-                            <input class="form-control" type="number" id="add-size" placeholder="Size" required>
+                            <input class="form-control" type="number" id="add-size" placeholder="Size" value="1" required>
                             <input class="btn btn-outline-success mr-2" id="AddItemInFormButton" type="submit" value="Add">
                             <a onclick="closeAllForms()" aria-label="Close">&#10006;</a>
                         </form>
@@ -289,7 +303,7 @@ body {
               </div>
             </div>
 
-            <div class="card ">
+            <div class="card" id="step_base">
               <div class="card-header" id="headingTwo">
                   <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" 
                   aria-expanded="false" aria-controls="collapseTwo"onclick="buttonAddBase()" id="addBaseButton">
@@ -303,7 +317,7 @@ body {
                         <form action="javascript:void(0);" method="POST" onsubmit="addBase()">
                             <input class="form-control" type="text" id="add-base-lat" placeholder="Latitude" required>
                             <input class="form-control" type="text" id="add-base-long" placeholder="Longitude" required>
-                            <input class="btn btn-outline-success mr-2" type="submit" value="Add">
+                            <input class="btn btn-outline-success mr-2" id="addBaseButtonClick" type="submit" value="Add">
                             <button type="button" class="close float-rigth" aria-label="Close Add base form" onclick="closeAllForms()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -351,8 +365,11 @@ body {
 
     <footer id="sticky-footer" class=" footer" >
         <div class="container text-center">
-          <small>2020 Copyright &copy; Mikołaj Hościło & Filip Szymczak</small>
-          <a class="badge badge-info" href="https://github.com/mhocio/DeliveryApp">github</a>
+            <a type="button" class="badge badge badge-warning" 
+                        onclick="showTour()" id="showRouteUserButton">Page Tour</a>
+            <br>
+            <small>2020 Copyright &copy; Mikołaj Hościło & Filip Szymczak</small>
+            <a class="badge badge-info" href="https://github.com/mhocio/DeliveryApp">github</a>
         </div>
       </footer>
 
