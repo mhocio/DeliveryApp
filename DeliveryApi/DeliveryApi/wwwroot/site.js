@@ -229,6 +229,9 @@ function loadPage() {
             closeOverlay_login();
             closeOverlay_register();
         }
+        if (key === 'h' || key === 'keyH' || key === 72) {
+            showTour();
+        }
     });
 
     function validatePassword() {

@@ -77,6 +77,8 @@ function logOutPress() {
     user.innerText = '';
     currentUser = '';
 
+    document.getElementById("showRouteUserButton").style.display = 'none';
+
     getItems();
     getBase();
 
@@ -102,6 +104,8 @@ function userDisplay(Uname) {
 
     var logout = document.getElementById('logout');
     logout.style.display = 'inline';
+
+    document.getElementById("showRouteUserButton").style.display = 'inline';
 
     getItems();
     getBase();
